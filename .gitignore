@@ -30,3 +30,13 @@ pnpm-debug.log*
 *.sln
 *.sw?
 Thumbs.db
+
+# Internal Developer Documents (Local Only - Only README.md is Public)
+CLAUDE.md
+PRD.md
+ARCHITECTURE.md
+WORKFLOW.md
+DESIGN.md
+SKILL.md
+SECURITY.md
+TODO.md

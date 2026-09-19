@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import DraggableFAB from "../components/DraggableFAB";
 import BottomNav from "../components/BottomNav";
 import TransactionModal from "../components/TransactionModal";
@@ -22,21 +22,19 @@ export default function AppShell() {
    };
 
    return (
-      <div className="min-h-screen relative flex flex-col">
-         {/* Render Active Route View with smooth client-side transition */}
-         <div className="flex-1">
-            <AnimatePresence>
-               <motion.div
-                  key={location.pathname}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="w-full"
-               >
-                  <Outlet />
-               </motion.div>
-            </AnimatePresence>
+      <div className="min-h-screen relative flex flex-col bg-[var(--color-bg)] text-[var(--color-ink)]">
+         {/* Render Active Route View with smooth GPU-accelerated transition */}
+         <div className="flex-1 w-full bg-[var(--color-bg)]">
+            <motion.div
+               key={location.pathname}
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 1 }}
+               transition={{ duration: 0.15, ease: "easeOut" }}
+               style={{ willChange: "opacity" }}
+               className="w-full"
+            >
+               <Outlet />
+            </motion.div>
          </div>
 
          {/* Draggable AssistiveTouch Floating Action Button (iOS Style) */}

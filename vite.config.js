@@ -16,11 +16,11 @@ export default defineConfig({
             "masked-icon.svg",
          ],
          manifest: {
-            name: "Sakuin — Kelola Uang Saku",
+            name: "Sakuin — Smart Personal Finance & Quick Expense Tracker",
             short_name: "Sakuin",
-            description: "Catat dan kelola uang saku Anda dengan mudah, rapi, dan teratur",
-            theme_color: "#FFD700",
-            background_color: "#FFF8DC",
+            description: "Catat pengeluaran sat-set, alokasikan anggaran bulanan, dan kelola uang saku pribadi secara cerdas.",
+            theme_color: "#10B981",
+            background_color: "#F8FAFC",
             display: "standalone",
             orientation: "portrait",
             icons: [
@@ -49,4 +49,17 @@ export default defineConfig({
          },
       }),
    ],
+   build: {
+      chunkSizeWarningLimit: 1000,
+      rollupOptions: {
+         output: {
+            manualChunks: {
+               vendor: ["react", "react-dom", "react-router-dom"],
+               motion: ["framer-motion"],
+               icons: ["lucide-react"],
+               pdf: ["jspdf", "jspdf-autotable"],
+            },
+         },
+      },
+   },
 });
