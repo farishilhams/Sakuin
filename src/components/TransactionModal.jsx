@@ -20,8 +20,18 @@ import {
    Camera,
    FileText,
    Undo2,
+   Search,
+   Plus,
+   ChevronRight,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+   walletCategories,
+   getAllWalletNames,
+   getCustomWallets,
+   saveCustomWallet,
+   getWalletColor,
+} from "../utils/walletsData";
 
 const defaultCategories = [
    { name: "Makanan & Minuman", icon: Utensils, color: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20 hover:bg-emerald-500/20" },
@@ -33,17 +43,9 @@ const defaultCategories = [
    { name: "Lainnya", icon: MoreHorizontal, color: "text-slate-500 bg-slate-500/10 border-slate-500/20 hover:bg-slate-500/20" },
 ];
 
-const wallets = [
-   "Tunai",
-   "BCA",
-   "Mandiri",
-   "GoPay",
-   "OVO",
-   "ShopeePay",
-   "DANA",
-];
-
+const quickPrimaryWallets = ["Tunai", "BCA", "Mandiri", "GoPay", "ShopeePay", "DANA"];
 const quickAdditions = [10000, 20000, 50000, 100000];
+const customColorOptions = ["#10B981", "#2563EB", "#8B5CF6", "#F59E0B", "#EC4899", "#06B6D4"];
 
 const TransactionModal = ({
    onClose,
@@ -61,6 +63,13 @@ const TransactionModal = ({
    const [showNotesInput, setShowNotesInput] = useState(false);
    const [showWalletsSelector, setShowWalletsSelector] = useState(false);
    const [submitting, setSubmitting] = useState(false);
+
+   // State for Categorized Wallet Drawer & Custom Wallet Form
+   const [walletSearchQuery, setWalletSearchQuery] = useState("");
+   const [customWalletsList, setCustomWalletsList] = useState(() => getCustomWallets());
+   const [showNewWalletForm, setShowNewWalletForm] = useState(false);
+   const [newWalletName, setNewWalletName] = useState("");
+   const [newWalletColor, setNewWalletColor] = useState("#10B981");
 
    // State for Edit Mode
    const [editFormData, setEditFormData] = useState({
@@ -140,7 +149,30 @@ const TransactionModal = ({
       setAmount(0);
    };
 
-   // 1-Tap Quick Save Handler (< 3 seconds, 1 category tap saves immediately)
+   // Handle Save New Custom Wallet
+   const handleCreateCustomWallet = (e) => {
+      e?.preventDefault();
+      if (!newWalletName.trim()) {
+         toast.error("Masukkan nama sumber dana");
+         return;
+      }
+
+      const updated = saveCustomWallet({
+         name: newWalletName.trim(),
+         color: newWalletColor,
+         category: "Lainnya",
+      });
+
+      setCustomWalletsList(updated);
+      setSelectedWallet(newWalletName.trim());
+      localStorage.setItem("sakuin_default_wallet", newWalletName.trim());
+      toast.success(`Sumber dana ${newWalletName.trim()} berhasil ditambahkan`);
+      setNewWalletName("");
+      setShowNewWalletForm(false);
+      setShowWalletsSelector(false);
+   };
+
+   // 1-Tap Quick Save Handler
    const handleCategoryTap = async (categoryName) => {
       if (submitting) return;
 
@@ -165,19 +197,17 @@ const TransactionModal = ({
       };
 
       try {
-         // Save default wallet for next sat-set entries
          localStorage.setItem("sakuin_default_wallet", selectedWallet);
 
          const res = await api.post("/transactions", payload);
          const createdTx = res.data.transaction;
 
-         // Immediately close modal & notify parent
          onClose();
          if (refreshTransactions) {
             refreshTransactions(createdTx);
          }
 
-         // Interactive Toast with Instant Undo (3-5 seconds)
+         // Interactive Toast with Instant Undo
          toast.custom(
             (t) => (
                <div
@@ -257,6 +287,28 @@ const TransactionModal = ({
       }
    };
 
+   // Filter wallets by search query
+   const filteredCategories = useMemo(() => {
+      const q = walletSearchQuery.toLowerCase().trim();
+      if (!q) return walletCategories;
+      return walletCategories
+         .map((cat) => ({
+            ...cat,
+            items: cat.items.filter((item) =>
+               item.name.toLowerCase().includes(q)
+            ),
+         }))
+         .filter((cat) => cat.items.length > 0);
+   }, [walletSearchQuery]);
+
+   const filteredCustomWallets = useMemo(() => {
+      const q = walletSearchQuery.toLowerCase().trim();
+      if (!q) return customWalletsList;
+      return customWalletsList.filter((w) =>
+         w.name.toLowerCase().includes(q)
+      );
+   }, [walletSearchQuery, customWalletsList]);
+
    return (
       <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
          <motion.div
@@ -277,10 +329,10 @@ const TransactionModal = ({
                   </div>
                   <div>
                      <h2 className="font-bold text-sm sm:text-base text-[var(--color-ink)] leading-none">
-                       {editData ? "Edit Transaksi" : "Catat Sat-Set (< 3 Detik)"}
+                        {editData ? "Edit Transaksi" : "Catat Sat-Set Super Cepat"}
                      </h2>
                      <p className="text-[11px] text-[var(--color-ink-muted)] mt-0.5">
-                       {editData ? "Perbarui informasi transaksi" : "Ketik nominal, lalu tap 1 kategori"}
+                        {editData ? "Perbarui informasi transaksi" : "Ketik nominal lalu tap 1 kategori"}
                      </p>
                   </div>
                </div>
@@ -294,7 +346,7 @@ const TransactionModal = ({
                            onOpenScanner();
                         }}
                         className="p-2 rounded-xl bg-[var(--color-bg)] hover:bg-emerald-500/10 text-[var(--color-ink-muted)] hover:text-emerald-600 transition-colors cursor-pointer"
-                        title="Pindai Struk / QRIS"
+                        title="Pindai Struk atau Bukti QRIS"
                      >
                         <Camera size={16} />
                      </button>
@@ -330,7 +382,7 @@ const TransactionModal = ({
                               setEditFormData({ ...editFormData, amount: e.target.value })
                            }
                            className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl py-2.5 pl-11 pr-4 font-mono font-bold text-base focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
-                           placeholder="Masukkan nominal (Rp)"
+                           placeholder="0"
                            required
                         />
                      </div>
@@ -374,7 +426,7 @@ const TransactionModal = ({
 
                      <div>
                         <label className="block mb-1 text-xs font-semibold text-[var(--color-ink)]">
-                           Dompet
+                           Sumber Dana
                         </label>
                         <select
                            value={editFormData.wallet}
@@ -383,11 +435,24 @@ const TransactionModal = ({
                            }
                            className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/30 cursor-pointer"
                         >
-                           {wallets.map((w) => (
-                              <option key={w} value={w}>
-                                 {w}
-                              </option>
+                           {walletCategories.map((cat) => (
+                              <optgroup key={cat.category} label={cat.category}>
+                                 {cat.items.map((item) => (
+                                    <option key={item.name} value={item.name}>
+                                       {item.name}
+                                    </option>
+                                 ))}
+                              </optgroup>
                            ))}
+                           {customWalletsList.length > 0 && (
+                              <optgroup label="Sumber Dana Kustom">
+                                 {customWalletsList.map((w) => (
+                                    <option key={w.name} value={w.name}>
+                                       {w.name}
+                                    </option>
+                                 ))}
+                              </optgroup>
+                           )}
                         </select>
                      </div>
                   </div>
@@ -408,9 +473,14 @@ const TransactionModal = ({
                   </div>
 
                   <div>
-                     <label className="block mb-1 text-xs font-semibold text-[var(--color-ink)]">
-                        Catatan Pengeluaran
-                     </label>
+                     <div className="flex items-center justify-between mb-1">
+                        <label className="text-xs font-semibold text-[var(--color-ink)]">
+                           Catatan Pengeluaran
+                        </label>
+                        <span className="text-[10px] font-semibold text-[var(--color-ink-muted)] bg-[var(--color-bg)] px-2 py-0.5 rounded-md border border-[var(--color-border)]">
+                           Opsional
+                        </span>
+                     </div>
                      <input
                         type="text"
                         value={editFormData.notes}
@@ -418,7 +488,7 @@ const TransactionModal = ({
                            setEditFormData({ ...editFormData, notes: e.target.value })
                         }
                         className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
-                        placeholder="Masukkan catatan (opsional)"
+                        placeholder="Tulis catatan transaksi"
                      />
                   </div>
 
@@ -573,57 +643,57 @@ const TransactionModal = ({
                   {/* 4. Wallet & Optional Note Strip */}
                   <div className="pt-2 border-t border-[var(--color-border)] space-y-2">
                      {/* Wallet quick selector */}
-                     <div className="flex items-center justify-between text-xs">
-                        <span className="text-[11px] font-medium text-[var(--color-ink-muted)]">
+                     <div className="flex items-center justify-between text-xs gap-1">
+                        <span className="text-[11px] font-medium text-[var(--color-ink-muted)] shrink-0">
                            Sumber Dana:
                         </span>
                         <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
-                           {wallets.slice(0, 4).map((w) => (
+                           {quickPrimaryWallets.slice(0, 4).map((w) => {
+                              const isSelected = selectedWallet === w;
+                              const wColor = getWalletColor(w);
+                              return (
+                                 <button
+                                    key={w}
+                                    type="button"
+                                    onClick={() => setSelectedWallet(w)}
+                                    className={`px-2 py-1 rounded-lg text-[11px] font-semibold border transition-colors flex items-center gap-1.5 cursor-pointer ${
+                                       isSelected
+                                          ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
+                                          : "bg-[var(--color-bg)] text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] border-[var(--color-border)]"
+                                    }`}
+                                 >
+                                    <span
+                                       className="w-2 h-2 rounded-full shrink-0"
+                                       style={{ backgroundColor: isSelected ? "#FFFFFF" : wColor }}
+                                    />
+                                    <span>{w}</span>
+                                 </button>
+                              );
+                           })}
+                           {/* If active wallet is not in top 4, display it */}
+                           {!quickPrimaryWallets.slice(0, 4).includes(selectedWallet) && (
                               <button
-                                 key={w}
                                  type="button"
-                                 onClick={() => setSelectedWallet(w)}
-                                 className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition-colors cursor-pointer ${
-                                    selectedWallet === w
-                                       ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
-                                       : "bg-[var(--color-bg)] text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] border-[var(--color-border)]"
-                                 }`}
+                                 className="px-2 py-1 rounded-lg text-[11px] font-semibold border bg-emerald-600 text-white border-emerald-600 shadow-xs flex items-center gap-1.5 cursor-pointer"
                               >
-                                 {w}
+                                 <span
+                                    className="w-2 h-2 rounded-full bg-white shrink-0"
+                                 />
+                                 <span className="truncate max-w-[80px]">{selectedWallet}</span>
                               </button>
-                           ))}
+                           )}
                            <button
                               type="button"
-                              onClick={() => setShowWalletsSelector(!showWalletsSelector)}
-                              className="px-2 py-1 rounded-lg text-[10px] text-[var(--color-ink-muted)] bg-[var(--color-bg)] border border-[var(--color-border)] hover:text-[var(--color-ink)] cursor-pointer"
+                              onClick={() => {
+                                 setShowWalletsSelector(true);
+                                 setWalletSearchQuery("");
+                              }}
+                              className="px-2.5 py-1 rounded-lg text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors shrink-0 cursor-pointer"
                            >
-                              {showWalletsSelector ? "Tutup" : "Lainnya"}
+                              Ganti
                            </button>
                         </div>
                      </div>
-
-                     {/* Expanded Wallet Selection */}
-                     {showWalletsSelector && (
-                        <div className="flex flex-wrap gap-1.5 p-2 bg-[var(--color-bg)] rounded-xl border border-[var(--color-border)]">
-                           {wallets.map((w) => (
-                              <button
-                                 key={w}
-                                 type="button"
-                                 onClick={() => {
-                                    setSelectedWallet(w);
-                                    setShowWalletsSelector(false);
-                                 }}
-                                 className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors cursor-pointer ${
-                                    selectedWallet === w
-                                       ? "bg-emerald-600 text-white border-emerald-600"
-                                       : "bg-[var(--color-surface)] text-[var(--color-ink)] border-[var(--color-border)]"
-                                 }`}
-                              >
-                                 {w}
-                              </button>
-                           ))}
-                        </div>
-                     )}
 
                      {/* Note toggle */}
                      {!showNotesInput ? (
@@ -633,7 +703,7 @@ const TransactionModal = ({
                            className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 hover:underline inline-flex items-center gap-1 cursor-pointer"
                         >
                            <FileText size={12} />
-                           <span>+ Tambah catatan / nama toko (opsional)</span>
+                           <span>+ Tambah catatan atau nama merchant</span>
                         </button>
                      ) : (
                         <div className="flex items-center gap-2 mt-1">
@@ -641,7 +711,7 @@ const TransactionModal = ({
                               type="text"
                               value={notes}
                               onChange={(e) => setNotes(e.target.value)}
-                              placeholder="Masukkan catatan (opsional)"
+                              placeholder="Nama toko atau catatan transaksi"
                               className="flex-1 border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
                               autoFocus
                            />
@@ -651,7 +721,7 @@ const TransactionModal = ({
                                  setShowNotesInput(false);
                                  setNotes("");
                               }}
-                              className="text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] p-1 text-xs"
+                              className="text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] p-1 text-xs cursor-pointer"
                            >
                               Batal
                            </button>
@@ -660,6 +730,213 @@ const TransactionModal = ({
                   </div>
                </div>
             )}
+
+            {/* Categorized Wallets Selector Sheet (Section 6.C) */}
+            <AnimatePresence>
+               {showWalletsSelector && (
+                  <motion.div
+                     initial={{ opacity: 0, y: 100 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     exit={{ opacity: 0, y: 100 }}
+                     transition={{ duration: 0.2 }}
+                     className="absolute inset-0 z-30 bg-[var(--color-surface)] flex flex-col overflow-hidden"
+                  >
+                     {/* Drawer Header */}
+                     <div className="px-4 py-3 border-b border-[var(--color-border)] flex items-center justify-between shrink-0">
+                        <div className="flex items-center gap-2">
+                           <div className="w-7 h-7 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                              <Wallet size={15} />
+                           </div>
+                           <h3 className="font-bold text-sm text-[var(--color-ink)]">
+                              Pilih Sumber Dana
+                           </h3>
+                        </div>
+                        <button
+                           type="button"
+                           onClick={() => {
+                              setShowWalletsSelector(false);
+                              setShowNewWalletForm(false);
+                           }}
+                           className="p-1.5 rounded-xl bg-[var(--color-bg)] text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] transition-colors cursor-pointer"
+                        >
+                           <X size={16} />
+                        </button>
+                     </div>
+
+                     {/* Search Bar */}
+                     <div className="p-3 border-b border-[var(--color-border)]">
+                        <div className="relative">
+                           <Search
+                              size={15}
+                              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-ink-muted)]"
+                           />
+                           <input
+                              type="text"
+                              value={walletSearchQuery}
+                              onChange={(e) => setWalletSearchQuery(e.target.value)}
+                              placeholder="Cari bank atau e-wallet..."
+                              className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl bg-[var(--color-bg)] border border-[var(--color-border)] text-[var(--color-ink)] focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                           />
+                        </div>
+                     </div>
+
+                     {/* Categorized Wallets List */}
+                     <div className="flex-1 overflow-y-auto p-3 space-y-4">
+                        {/* Custom Wallets if any */}
+                        {filteredCustomWallets.length > 0 && (
+                           <div>
+                              <span className="text-[10px] font-bold text-[var(--color-ink-muted)] uppercase tracking-wider block mb-1.5 px-1">
+                                 Sumber Dana Kustom Anda
+                              </span>
+                              <div className="grid grid-cols-2 gap-1.5">
+                                 {filteredCustomWallets.map((cw) => (
+                                    <button
+                                       key={cw.name}
+                                       type="button"
+                                       onClick={() => {
+                                          setSelectedWallet(cw.name);
+                                          localStorage.setItem("sakuin_default_wallet", cw.name);
+                                          setShowWalletsSelector(false);
+                                       }}
+                                       className={`flex items-center justify-between p-2.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+                                          selectedWallet === cw.name
+                                             ? "bg-emerald-500/10 border-emerald-500 text-emerald-600 dark:text-emerald-400"
+                                             : "bg-[var(--color-bg)] border-[var(--color-border)] text-[var(--color-ink)] hover:border-emerald-500/30"
+                                       }`}
+                                    >
+                                       <div className="flex items-center gap-2 truncate">
+                                          <span
+                                             className="w-2.5 h-2.5 rounded-full shrink-0"
+                                             style={{ backgroundColor: cw.color || "#10B981" }}
+                                          />
+                                          <span className="truncate">{cw.name}</span>
+                                       </div>
+                                       {selectedWallet === cw.name && (
+                                          <Check size={14} className="text-emerald-500 shrink-0" />
+                                       )}
+                                    </button>
+                                 ))}
+                              </div>
+                           </div>
+                        )}
+
+                        {/* All Predefined Categories (35+ Entitas) */}
+                        {filteredCategories.map((cat) => (
+                           <div key={cat.category}>
+                              <div className="flex items-center gap-1.5 mb-1.5 px-1">
+                                 <span
+                                    className="w-2 h-2 rounded-full"
+                                    style={{ backgroundColor: cat.color }}
+                                 />
+                                 <span className="text-[10px] font-bold text-[var(--color-ink-muted)] uppercase tracking-wider">
+                                    {cat.category}
+                                 </span>
+                              </div>
+                              <div className="grid grid-cols-2 gap-1.5">
+                                 {cat.items.map((item) => {
+                                    const isSel = selectedWallet === item.name;
+                                    return (
+                                       <button
+                                          key={item.name}
+                                          type="button"
+                                          onClick={() => {
+                                             setSelectedWallet(item.name);
+                                             localStorage.setItem("sakuin_default_wallet", item.name);
+                                             setShowWalletsSelector(false);
+                                          }}
+                                          className={`flex items-center justify-between p-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+                                             isSel
+                                                ? "bg-emerald-500/10 border-emerald-500 text-emerald-600 dark:text-emerald-400"
+                                                : "bg-[var(--color-bg)] border-[var(--color-border)] text-[var(--color-ink)] hover:border-emerald-500/30"
+                                          }`}
+                                       >
+                                          <div className="flex items-center gap-2 truncate">
+                                             <span
+                                                className="w-2 h-2 rounded-full shrink-0"
+                                                style={{ backgroundColor: item.color }}
+                                             />
+                                             <span className="truncate">{item.name}</span>
+                                          </div>
+                                          {isSel && (
+                                             <Check size={14} className="text-emerald-500 shrink-0" />
+                                          )}
+                                       </button>
+                                    );
+                                 })}
+                              </div>
+                           </div>
+                        ))}
+
+                        {/* + Tambah Sumber Dana Lain Form Drawer */}
+                        <div className="pt-2">
+                           {!showNewWalletForm ? (
+                              <button
+                                 type="button"
+                                 onClick={() => setShowNewWalletForm(true)}
+                                 className="w-full py-2.5 px-3 rounded-xl border-2 border-dashed border-[var(--color-border)] hover:border-emerald-500/50 text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                              >
+                                 <Plus size={14} />
+                                 <span>Tambah Sumber Dana Lain</span>
+                              </button>
+                           ) : (
+                              <form
+                                 onSubmit={handleCreateCustomWallet}
+                                 className="p-3 bg-[var(--color-bg)] rounded-xl border border-[var(--color-border)] space-y-2.5"
+                              >
+                                 <div className="flex items-center justify-between">
+                                    <span className="text-xs font-bold text-[var(--color-ink)]">
+                                       Tambah Sumber Dana Kustom
+                                    </span>
+                                    <button
+                                       type="button"
+                                       onClick={() => setShowNewWalletForm(false)}
+                                       className="text-[10px] text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
+                                    >
+                                       Batal
+                                    </button>
+                                 </div>
+
+                                 <input
+                                    type="text"
+                                    value={newWalletName}
+                                    onChange={(e) => setNewWalletName(e.target.value)}
+                                    placeholder="Contoh: Tabungan Emas atau Kripto"
+                                    className="w-full px-3 py-1.5 text-xs rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-ink)] focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                                    autoFocus
+                                 />
+
+                                 <div>
+                                    <span className="text-[10px] text-[var(--color-ink-muted)] block mb-1">
+                                       Pilih Warna Label:
+                                    </span>
+                                    <div className="flex items-center gap-2">
+                                       {customColorOptions.map((c) => (
+                                          <button
+                                             key={c}
+                                             type="button"
+                                             onClick={() => setNewWalletColor(c)}
+                                             className={`w-5 h-5 rounded-full transition-transform cursor-pointer ${
+                                                newWalletColor === c ? "scale-125 ring-2 ring-emerald-500" : ""
+                                             }`}
+                                             style={{ backgroundColor: c }}
+                                          />
+                                       ))}
+                                    </div>
+                                 </div>
+
+                                 <button
+                                    type="submit"
+                                    className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold cursor-pointer transition-colors"
+                                 >
+                                    Simpan dan Gunakan
+                                 </button>
+                              </form>
+                           )}
+                        </div>
+                     </div>
+                  </motion.div>
+               )}
+            </AnimatePresence>
          </motion.div>
       </div>
    );

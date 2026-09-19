@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Search, RotateCcw, X, Filter } from "lucide-react";
+import { walletCategories, getCustomWallets } from "../utils/walletsData";
 
 const allCategories = [
    "Makanan & Minuman",
@@ -11,16 +12,6 @@ const allCategories = [
    "Pendidikan",
    "Kebutuhan Pribadi",
    "Lainnya",
-];
-
-const allWallets = [
-   "Tunai",
-   "BCA",
-   "Mandiri",
-   "GoPay",
-   "OVO",
-   "ShopeePay",
-   "DANA",
 ];
 
 const TransactionFilter = ({
@@ -170,7 +161,7 @@ const TransactionFilter = ({
                         htmlFor="walletFilter"
                         className="block mb-1.5 text-xs font-semibold text-[var(--color-ink)]"
                      >
-                        Sumber Dompet
+                        Sumber Dana
                      </label>
                      <select
                         id="walletFilter"
@@ -178,12 +169,25 @@ const TransactionFilter = ({
                         onChange={(e) => setWalletFilter && setWalletFilter(e.target.value)}
                         className="w-full border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-ink)] px-3 py-2 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer"
                      >
-                        <option value="all">Semua Dompet</option>
-                        {allWallets.map((w) => (
-                           <option key={w} value={w}>
-                              {w}
-                           </option>
+                        <option value="all">Semua Sumber Dana</option>
+                        {walletCategories.map((cat) => (
+                           <optgroup key={cat.category} label={cat.category}>
+                              {cat.items.map((item) => (
+                                 <option key={item.name} value={item.name}>
+                                    {item.name}
+                                 </option>
+                              ))}
+                           </optgroup>
                         ))}
+                        {getCustomWallets().length > 0 && (
+                           <optgroup label="Sumber Dana Kustom">
+                              {getCustomWallets().map((cw) => (
+                                 <option key={cw.name} value={cw.name}>
+                                    {cw.name}
+                                 </option>
+                              ))}
+                           </optgroup>
+                        )}
                      </select>
                   </div>
                </div>

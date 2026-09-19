@@ -53,7 +53,7 @@ export default function ReceiptScannerModal({ isOpen, onClose, onTransactionSave
       if (!file) return;
 
       if (!file.type.startsWith("image/")) {
-         toast.error("Harap pilih file gambar (JPG, PNG, WebP)!");
+         toast.error("Harap pilih file gambar JPG, PNG, atau WebP!");
          return;
       }
 
@@ -345,7 +345,7 @@ export default function ReceiptScannerModal({ isOpen, onClose, onTransactionSave
                               {/* Nominal */}
                               <div>
                                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                                    Nominal Total (Rp)
+                                    Nominal Total
                                  </label>
                                  <div className="relative">
                                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400">
@@ -355,7 +355,7 @@ export default function ReceiptScannerModal({ isOpen, onClose, onTransactionSave
                                        type="text"
                                        value={parsedData.displayAmount}
                                        onChange={handleAmountChange}
-                                       placeholder="Masukkan nominal (Rp)"
+                                       placeholder="0"
                                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-sm font-semibold font-mono tabular-nums focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                                     />
                                  </div>

@@ -242,8 +242,8 @@ const TransactionTable = ({
          {/* Top Section */}
          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-[var(--color-border)] pb-4">
             <div className="flex items-center gap-2.5">
-               <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
-                  <ReceiptText size={18} className="stroke-[2.2]" />
+               <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
+                  <ReceiptText size={20} className="stroke-[2.2]" />
                </div>
                <div>
                   <h2 className="font-bold text-base sm:text-lg text-[var(--color-ink)] leading-tight">

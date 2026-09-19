@@ -13,7 +13,7 @@ const WishlistStatsCard = ({ number, title, value, isPrice = false }) => {
          className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-5 shadow-xs flex-1 flex flex-col justify-between transition-all"
       >
          <div className="flex items-center justify-between mb-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
                <Icon size={20} className="stroke-[2.2]" />
             </div>
             <span className="text-[11px] font-semibold text-[var(--color-ink-muted)] bg-[var(--color-bg)] px-2.5 py-0.5 rounded-full border border-[var(--color-border)]">

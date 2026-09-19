@@ -12,17 +12,17 @@ export default function TutorialPenggunaanAtLogin({ setShowTutorial }) {
       {
          num: "02",
          title: "Atur Pemasukan & Alokasi Anggaran",
-         desc: "Di dashboard utama, masukkan estimasi saldo/dana masuk bulanan dan tetapkan batas anggaran per kategori (amplop keuangan).",
+         desc: "Di dashboard utama, masukkan estimasi saldo dana masuk bulanan dan tetapkan batas anggaran per kategori seperti amplop keuangan pintar.",
       },
       {
          num: "03",
-         title: "Catat Pengeluaran Sat-Set (< 3 Detik)",
-         desc: "Gunakan tombol cepat (+) untuk mencatat nominal dan kategori secara instan. Saldo dan meteran batas anggaran akan terhitung otomatis.",
+         title: "Catat Pengeluaran Sat-Set Super Cepat",
+         desc: "Gunakan tombol cepat tambah untuk mencatat nominal dan kategori secara instan. Saldo dan meteran batas anggaran akan terhitung otomatis.",
       },
       {
          num: "04",
-         title: "Pindai Struk & Bukti Transfer (OCR)",
-         desc: "Cukup foto struk belanjaan atau unggah tangkapan layar m-banking/QRIS. Sistem otomatis mengekstrak nominal, tanggal, dan nama merchant.",
+         title: "Pindai Struk & Bukti Transfer Otomatis",
+         desc: "Cukup foto struk belanjaan atau unggah tangkapan layar m-banking atau bukti QRIS. Sistem otomatis mengekstrak nominal, tanggal, dan nama merchant.",
       },
       {
          num: "05",

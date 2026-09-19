@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import TransactionTable from "../components/TransactionTable";
 import BudgetEditor from "../components/BudgetEditor";
@@ -14,9 +15,13 @@ import QuickAddTransactionButton from "../components/QuickAddTransactionButton";
 import BottomNav from "../components/BottomNav";
 import TransactionModal from "../components/TransactionModal";
 import ReceiptScannerModal from "../components/ReceiptScannerModal";
+import ProfileModal from "../components/ProfileModal";
 
 const Dashboard = () => {
    const { user, logout } = useContext(AuthContext);
+   const location = useLocation();
+   const navigate = useNavigate();
+
    const [transactions, setTransactions] = useState([]);
    const [budgets, setBudgets] = useState([]);
    const [monthlyIncome, setMonthlyIncome] = useState(null);
@@ -26,8 +31,18 @@ const Dashboard = () => {
 
    const [historyUpdateCounter, setHistoryUpdateCounter] = useState(0);
    const [showHistoryModal, setShowHistoryModal] = useState(false);
+   const [showProfileModal, setShowProfileModal] = useState(false);
    const [showMobileQuickAdd, setShowMobileQuickAdd] = useState(false);
    const [showMobileScanner, setShowMobileScanner] = useState(false);
+
+   // Auto-open history modal if redirected with ?history=true
+   useEffect(() => {
+      const params = new URLSearchParams(location.search);
+      if (params.get("history") === "true") {
+         setShowHistoryModal(true);
+         navigate("/", { replace: true });
+      }
+   }, [location, navigate]);
 
    const [actualSpending, setActualSpending] = useState({
       Makanan: 0,
@@ -202,7 +217,15 @@ const Dashboard = () => {
          {/* Mobile Bottom Navigation Bar (< 768px) */}
          <BottomNav
             onOpenQuickAdd={() => setShowMobileQuickAdd(true)}
-            onOpenScanner={() => setShowMobileScanner(true)}
+            onOpenHistory={() => setShowHistoryModal(true)}
+            onOpenProfile={() => setShowProfileModal(true)}
+         />
+
+         {/* Mobile Profile Modal */}
+         <ProfileModal
+            isOpen={showProfileModal}
+            onClose={() => setShowProfileModal(false)}
+            user={user}
             onLogout={logout}
          />
 

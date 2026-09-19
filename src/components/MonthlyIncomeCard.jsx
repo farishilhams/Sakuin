@@ -39,8 +39,8 @@ const MonthlyIncomeCard = ({ monthlyIncome, setMonthlyIncome }) => {
       <section className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 shadow-xs flex flex-col justify-between transition-colors">
          <div>
             <div className="flex items-center gap-2.5 pb-4 mb-5 border-b border-[var(--color-border)]">
-               <div className="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center">
-                  <Coins size={18} className="stroke-[2.2]" />
+               <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center">
+                  <Coins size={20} className="stroke-[2.2]" />
                </div>
                <div>
                   <h2 className="font-bold text-base sm:text-lg text-[var(--color-ink)] leading-tight">
@@ -59,7 +59,7 @@ const MonthlyIncomeCard = ({ monthlyIncome, setMonthlyIncome }) => {
                   </span>
                   <input
                      type="number"
-                     placeholder="Masukkan nominal (Rp)"
+                     placeholder="0"
                      value={incomeValue}
                      onChange={(e) => setIncomeValue(e.target.value)}
                      className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl py-2.5 pl-10 pr-4 font-mono text-sm sm:text-base tabular-nums focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"

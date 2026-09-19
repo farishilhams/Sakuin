@@ -1,22 +1,29 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { LayoutDashboard, Target, Plus, Receipt, LogOut } from "lucide-react";
+import { LayoutDashboard, Target, Plus, History, User } from "lucide-react";
 import { motion } from "framer-motion";
-import ThemeSwitcher from "./ThemeSwitcher";
 
-export default function BottomNav({ onOpenQuickAdd, onOpenScanner, onLogout }) {
+export default function BottomNav({ onOpenQuickAdd, onOpenHistory, onOpenProfile }) {
    const navigate = useNavigate();
    const location = useLocation();
 
    const isDashboard = location.pathname === "/";
    const isWishlist = location.pathname === "/wishlist";
 
+   const handleHistoryClick = () => {
+      if (onOpenHistory) {
+         onOpenHistory();
+      } else {
+         navigate("/?history=true");
+      }
+   };
+
    return (
       <nav
          aria-label="Navigasi Utama Ponsel"
-         className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[var(--color-surface)]/95 backdrop-blur-xl border-t border-[var(--color-border)] px-3 py-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(0,0,0,0.06)] select-none transition-colors"
+         className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[var(--color-surface)]/95 backdrop-blur-xl border-t border-[var(--color-border)] px-2 py-1.5 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(0,0,0,0.06)] select-none transition-colors"
       >
-         <div className="max-w-md mx-auto flex items-center justify-around relative">
+         <div className="max-w-md mx-auto flex items-center justify-between relative">
             {/* 1. Arus Kas (Dashboard) */}
             <button
                type="button"
@@ -78,24 +85,31 @@ export default function BottomNav({ onOpenQuickAdd, onOpenScanner, onLogout }) {
                </motion.button>
             </div>
 
-            {/* 4. Pindai Struk / Bukti QRIS */}
+            {/* 4. Riwayat Transaksi */}
             <button
                type="button"
-               onClick={onOpenScanner}
+               onClick={handleHistoryClick}
                className="flex flex-col items-center justify-center flex-1 py-1 text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] transition-all cursor-pointer"
-               title="Pindai Struk & Bukti Transaksi"
+               title="Riwayat Transaksi Terhapus dan Aktivitas"
             >
-               <Receipt size={20} className="stroke-[2.2]" />
-               <span className="text-[10px] mt-1 font-medium tracking-tight">Pindai</span>
+               <div className="relative">
+                  <History size={20} className="stroke-[2.2]" />
+               </div>
+               <span className="text-[10px] mt-1 font-medium tracking-tight">Riwayat</span>
             </button>
 
-            {/* 5. Theme Switcher */}
-            <div className="flex flex-col items-center justify-center flex-1 py-1">
-               <ThemeSwitcher />
-               <span className="text-[10px] mt-0.5 font-medium tracking-tight text-[var(--color-ink-muted)]">
-                  Mode
-               </span>
-            </div>
+            {/* 5. Profil Akun */}
+            <button
+               type="button"
+               onClick={onOpenProfile}
+               className="flex flex-col items-center justify-center flex-1 py-1 text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] transition-all cursor-pointer"
+               title="Profil Akun Pengguna"
+            >
+               <div className="relative">
+                  <User size={20} className="stroke-[2.2]" />
+               </div>
+               <span className="text-[10px] mt-1 font-medium tracking-tight">Profil</span>
+            </button>
          </div>
       </nav>
    );

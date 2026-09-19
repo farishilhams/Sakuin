@@ -187,7 +187,7 @@ const WishlistModal = ({ isOpen, onClose, onSave, item }) => {
                         className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl py-2.5 pl-10 pr-3.5 font-mono text-sm sm:text-base tabular-nums focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
                         value={displayPrice}
                         onChange={handlePriceChange}
-                        placeholder="Masukkan nominal (Rp)"
+                        placeholder="0"
                         required
                      />
                   </div>
@@ -196,13 +196,13 @@ const WishlistModal = ({ isOpen, onClose, onSave, item }) => {
                {/* Description */}
                <div>
                   <label className="block mb-1.5 text-xs font-semibold text-[var(--color-ink)]">
-                     Catatan / Alasan Pembelian
+                     Catatan dan Alasan Pembelian
                   </label>
                   <textarea
                      className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl p-3 text-xs sm:text-sm min-h-20 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
                      value={description}
                      onChange={(e) => setDescription(e.target.value)}
-                     placeholder="Masukkan catatan alasan pembelian (opsional)..."
+                     placeholder="Masukkan catatan alasan pembelian..."
                      required
                   />
                </div>
@@ -210,29 +210,34 @@ const WishlistModal = ({ isOpen, onClose, onSave, item }) => {
                {/* Purchase Link */}
                <div>
                   <label className="block mb-1.5 text-xs font-semibold text-[var(--color-ink)]">
-                     Link Toko / Produk
+                     Tautan Toko atau Produk
                   </label>
                   <input
                      type="url"
                      className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
                      value={purchaseLink}
                      onChange={(e) => setPurchaseLink(e.target.value)}
-                     placeholder="Masukkan link produk (opsional)"
+                     placeholder="https://... atau tautan produk"
                      required
                   />
                </div>
 
                {/* Image URL */}
                <div>
-                  <label className="block mb-1.5 text-xs font-semibold text-[var(--color-ink)]">
-                     URL Foto Produk (Opsional)
-                  </label>
+                  <div className="flex items-center justify-between mb-1.5">
+                     <label className="text-xs font-semibold text-[var(--color-ink)]">
+                        URL Foto Produk
+                     </label>
+                     <span className="text-[10px] font-semibold text-[var(--color-ink-muted)] bg-[var(--color-bg)] px-2 py-0.5 rounded-md border border-[var(--color-border)]">
+                        Opsional
+                     </span>
+                  </div>
                   <input
                      type="url"
                      className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
                      value={imageUrls}
                      onChange={(e) => setImageUrls(e.target.value)}
-                     placeholder="Masukkan tautan foto produk (opsional)"
+                     placeholder="https://... URL gambar produk"
                   />
                </div>
 

@@ -75,8 +75,8 @@ const BudgetEditor = ({
       <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 shadow-xs flex flex-col justify-between transition-colors">
          <div>
             <div className="flex items-center gap-2.5 pb-4 mb-5 border-b border-[var(--color-border)]">
-               <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
-                  <PieChart size={18} className="stroke-[2.2]" />
+               <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
+                  <PieChart size={20} className="stroke-[2.2]" />
                </div>
                <div>
                   <h2 className="font-bold text-base sm:text-lg text-[var(--color-ink)] leading-tight">

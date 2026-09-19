@@ -32,7 +32,7 @@ const StatsCard = ({
       >
          <div>
             <div className="flex items-center justify-between mb-3">
-               <div className={`w-10 h-10 rounded-xl ${iconBg} ${iconColor} flex items-center justify-center shadow-xs`}>
+               <div className={`w-10 h-10 rounded-2xl ${iconBg} ${iconColor} flex items-center justify-center shadow-xs`}>
                   <Icon size={20} className="stroke-[2.2]" />
                </div>
                <span className="text-[11px] font-semibold text-[var(--color-ink-muted)] bg-[var(--color-bg)] px-2.5 py-0.5 rounded-full border border-[var(--color-border)]">

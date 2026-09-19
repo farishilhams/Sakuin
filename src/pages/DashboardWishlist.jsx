@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import Header from "../components/Header";
 import Wishlists from "../components/Wishlists";
@@ -11,9 +12,11 @@ import LoadingIndicatorWishlist from "../components/LoadingIndicatorWishlist";
 import BottomNav from "../components/BottomNav";
 import TransactionModal from "../components/TransactionModal";
 import ReceiptScannerModal from "../components/ReceiptScannerModal";
+import ProfileModal from "../components/ProfileModal";
 
 const DashboardWishlist = () => {
-   const { logout } = useContext(AuthContext);
+   const { user, logout } = useContext(AuthContext);
+   const navigate = useNavigate();
    const [items, setItems] = useState([]);
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [currentItem, setCurrentItem] = useState(null);
@@ -23,6 +26,7 @@ const DashboardWishlist = () => {
    const [isLoadingWishlists, setIsLoadingWishlists] = useState(true);
    const [showMobileQuickAdd, setShowMobileQuickAdd] = useState(false);
    const [showMobileScanner, setShowMobileScanner] = useState(false);
+   const [showProfileModal, setShowProfileModal] = useState(false);
 
    const fetchWishlist = useCallback(async () => {
       try {
@@ -147,7 +151,15 @@ const DashboardWishlist = () => {
          {/* Mobile Bottom Navigation Bar (< 768px) */}
          <BottomNav
             onOpenQuickAdd={() => setShowMobileQuickAdd(true)}
-            onOpenScanner={() => setShowMobileScanner(true)}
+            onOpenHistory={() => navigate("/?history=true")}
+            onOpenProfile={() => setShowProfileModal(true)}
+         />
+
+         {/* Mobile Profile Modal */}
+         <ProfileModal
+            isOpen={showProfileModal}
+            onClose={() => setShowProfileModal(false)}
+            user={user}
             onLogout={logout}
          />
 

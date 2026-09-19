@@ -18,6 +18,19 @@ const WalletSchema = new mongoose.Schema(
          enum: ["cash", "bank", "ewallet", "other"],
          default: "cash",
       },
+      category: {
+         type: String,
+         enum: [
+            "Tunai",
+            "Bank Konvensional",
+            "Bank Syariah",
+            "Bank Digital",
+            "E-Wallet",
+            "QRIS",
+            "Lainnya",
+         ],
+         default: "Tunai",
+      },
       balance: {
          type: Number,
          default: 0,

@@ -49,19 +49,8 @@ const TransactionSchema = new mongoose.Schema(
       },
       wallet: {
          type: String,
-         enum: [
-            "Tunai",
-            "BCA",
-            "Mandiri",
-            "BRI",
-            "BNI",
-            "GoPay",
-            "OVO",
-            "ShopeePay",
-            "DANA",
-            "Lainnya",
-         ],
          default: "Tunai",
+         trim: true,
       },
       notes: {
          type: String,

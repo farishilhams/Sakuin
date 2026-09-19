@@ -163,9 +163,9 @@ const WishlistFilter = ({
                            onChange={handleOperatorChange}
                            className="border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl px-3 py-2.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer shrink-0"
                         >
-                           <option value="lessEqual">Maksimal (≤)</option>
-                           <option value="greaterEqual">Minimal (≥)</option>
-                           <option value="equals">Sama Dengan (=)</option>
+                           <option value="lessEqual">Maksimal</option>
+                           <option value="greaterEqual">Minimal</option>
+                           <option value="equals">Sama Dengan</option>
                            <option value="between">Rentang Harga</option>
                         </select>
 
@@ -175,7 +175,7 @@ const WishlistFilter = ({
                                  type="number"
                                  value={minPrice}
                                  onChange={(e) => setMinPrice(e.target.value)}
-                                 placeholder="Min (Rp)"
+                                 placeholder="Min 0"
                                  className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl px-3 py-2.5 text-xs font-mono tabular-nums focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
                               />
                               <span className="text-xs text-[var(--color-ink-muted)]">–</span>
@@ -183,7 +183,7 @@ const WishlistFilter = ({
                                  type="number"
                                  value={maxPrice}
                                  onChange={(e) => setMaxPrice(e.target.value)}
-                                 placeholder="Maks (Rp)"
+                                 placeholder="Maks 0"
                                  className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl px-3 py-2.5 text-xs font-mono tabular-nums focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
                               />
                            </div>
