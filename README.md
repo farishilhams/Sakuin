@@ -1,42 +1,74 @@
-# Sakuin — Daily Personal Finance Tracker Sat-Set 💰
+# Sakuin — Smart Personal Finance & Quick Expense Tracker 💰
 
 [![Maintainer](https://img.shields.io/badge/Maintainer-Farish%20Ilham%20Syahrani-10b981.svg)](https://github.com/farishilhams)
 [![Repository](https://img.shields.io/badge/GitHub-farishilhams%2FSakuin-0f172a.svg)](https://github.com/farishilhams/Sakuin.git)
-[![Stack](https://img.shields.io/badge/Tech%20Stack-MERN%20%2B%20Vite%20%2B%20Tailwind-6366f1.svg)]()
+[![Stack](https://img.shields.io/badge/Tech%20Stack-MERN%20%2B%20Vite%20%2B%20Tailwind%20%2B%20Framer-6366f1.svg)]()
 [![License](https://img.shields.io/badge/License-MIT-emerald.svg)]()
 
-> **Sakuin** (berasal dari kata *"masukin ke saku"*) adalah platform pencatatan keuangan pribadi super-cepat (*sat-set*) yang dirancang untuk membantu Anda memantau arus kas harian, mendisiplinkan alokasi anggaran bulanan (*envelope budgeting*), dan merencanakan barang impian tanpa distraksi.
+> **Sakuin** (dari kata *"masukin ke saku"*) adalah platform pencatatan keuangan pribadi dan pengelolaan uang saku berkecepatan tinggi (*sat-set*). Didesain dengan estetika *modern clean fintech* (bebas AI Slop), tipografi Google Font **Poppins**, animasi halus **Framer Motion**, serta pengalaman navigasi *mobile-first* (Bottom Navigation Bar & Bottom Sheet Drawer).
 
 ---
 
-## 🌟 Fitur Utama
+## 🌟 Fitur Unggulan
 
-- ⚡ **Input Pengeluaran Sat-Set (< 3 Detik)**: Antarmuka *thumb-friendly* dengan keypad nominal cepat, kategori satu-klik, dan opsi pemilihan sumber dana / dompet digital.
-- 📸 **Pindai Bukti Transaksi & QRIS Instan**: Pindai struk belanja atau tangkapan layar m-banking secara instan dengan teknologi OCR client-side berakurasi tinggi (nominal, tanggal, dan nama merchant terbaca otomatis).
-- 📊 **Dasbor Arus Kas & Anggaran Amplop**: Pemantauan real-time saldo bersih, total pemasukan, pengeluaran, dan meteran alokasi budget dengan indikator semantik (Aman, Waspada, Boncos).
-- 🎯 **Target Tabungan & Wishlist**: Kelola daftar barang impian lengkap dengan estimasi harga, link toko online, foto produk, dan akumulasi target tabungan.
-- 📑 **Ekspor Laporan PDF**: Unduh rekapitulasi transaksi bulanan resmi dalam format dokumen PDF siap cetak.
-- 📱 **Multi-Device Responsif Nyata**: Dioptimalkan secara mulus untuk perangkat Laptop, Tablet/iPad, Android, dan iPhone/iOS dengan safe-area navigation.
-- 🔒 **Keamanan Berlapis**: Dilengkapi HTTP security headers (*Helmet*), proteksi NoSQL injection, pembatasan laju request (*rate-limiting*), dan integrasi Google OAuth 2.0.
+- ⚡ **Pencatatan Cepat Sat-Set (< 3 Detik)**:
+  - Input angka nominal otomatis aktif (*auto-focus*) dengan chip nominal instan (`+10rb`, `+20rb`, `+50rb`, `+100rb`).
+  - Pemilihan kategori satu-sentuhan (Makanan, Transportasi, Hiburan, Belanja, Tagihan, Kesehatan, Pendidikan, Kebutuhan Pribadi).
+  - Pilihan multi-sumber dana (Dompet Tunai, Rekening Bank BCA/Mandiri/BRI/BNI, dan E-Wallet GoPay/OVO/ShopeePay/DANA).
+- 📸 **Pindai Struk & Bukti Transaksi Instan (OCR)**:
+  - Ekstraksi otomatis nominal, tanggal, dan nama toko/merchant dari struk belanja atau tangkapan layar m-banking (QRIS).
+- 📊 **Dasbor Arus Kas Real-Time**:
+  - Ringkasan total saldo bersih, pengeluaran & pemasukan harian/bulanan.
+  - Bar progres anggaran amplop (*envelope budgeting*) dengan indikator semantik (Aman, Waspada, Over Budget).
+- 📱 **Responsivitas Perangkat Nyata (Mobile-First)**:
+  - **Ponsel (Android & iPhone)**: Navigasi bawah (*Bottom Navigation Bar*), modal lembar dari bawah (*Bottom Sheet Drawer*), dan tampilan riwayat berbasis kartu (*Card Feed*).
+  - **Tablet & iPad**: Layout *split-view* adaptif.
+  - **Laptop & Desktop**: Tabel transaksi analitik lengkap dengan sorting, filtering, dan ekspor PDF.
+- 👁️ **Form Input Terstandarisasi & Toggle Password**:
+  - Placeholder aksi ramah pengguna: *"Masukkan nama lengkap"*, *"Masukkan alamat email"*, *"Masukkan kata sandi"*, *"Masukkan konfirmasi kata sandi"*, *"Masukkan nominal (Rp)"*.
+  - Ikon interaktif mata (`Eye` & `EyeOff`) untuk melihat atau menyembunyikan kata sandi.
+- 🔒 **Keamanan Berlapis**:
+  - Proteksi HTTP Security Headers (`helmet`), Anti-NoSQL Injection (`express-mongo-sanitize`), Rate Limiter autentikasi, serta hash kata sandi `bcrypt`.
 
 ---
 
-## 🛠️ Tech Stack Modern
+## 🛠️ Tech Stack
 
-- **Frontend**: React 19, Vite 6, Tailwind CSS v4, Framer Motion, Lucide React, Google Font Poppins, JetBrains Mono.
-- **Backend**: Node.js, Express.js, MongoDB & Mongoose 8, JWT Authentication, Passport.js Google OAuth 2.0.
-- **Security**: Helmet, Express Rate Limit, Express Mongo Sanitize, Bcryptjs.
-- **Tooling**: Tesseract.js (OCR Client Engine), JsPDF, Concurrently.
+| Layer | Teknologi |
+|---|---|
+| **Frontend** | React 19, Vite 6, Tailwind CSS v4, Framer Motion, Lucide React, Google Font Poppins |
+| **Backend** | Node.js, Express.js (Modular Controllers, Services, Models) |
+| **Database** | MongoDB dengan Mongoose 8 (Compound Indexing performa tinggi) |
+| **Autentikasi** | JWT (JSON Web Token) + Passport.js (Google OAuth 2.0) |
+| **Keamanan** | Helmet, Express Rate Limit, Express Mongo Sanitize, Bcryptjs |
+| **Dokumen & PWA** | jsPDF, jspdf-autotable, vite-plugin-pwa |
 
 ---
 
-## 🚀 Panduan Instalasi Lokal
+## 🗄️ Skema Model Database Mongoose
+
+Platform Sakuin memiliki 4 pilar skema data utama di direktori `models/`:
+
+1. **`User`** (`models/User.js`):
+   - Menyimpan identitas akun (`name`, `email` unique & lowercase, `password` ter-hash bcrypt, `googleId`, `avatar`, `provider`).
+2. **`Wallet`** (`models/Wallet.js`):
+   - Pengelolaan multi-rekening & dompet digital (`userId`, `name`, `type` [cash, bank, ewallet, other], `balance`, `accountNumber`, `color`, `isDefault`).
+   - Compound index: `{ userId: 1, name: 1 }`.
+3. **`Transaction`** (`models/Transaction.js`):
+   - Jurnal transaksi harian (`userId`, `name`, `category`, `amount`, `date`, `type` [expense, income, transfer], `wallet`, `notes`, `receiptUrl`).
+   - Compound indexes: `{ userId: 1, date: -1 }`, `{ userId: 1, category: 1 }`, `{ userId: 1, type: 1 }`.
+4. **`Budget`** (`models/Budget.js`):
+   - Limit batas pengeluaran bulanan per kategori (`userId`, `category`, `budget`).
+   - Unique compound index: `{ userId: 1, category: 1 }`.
+
+---
+
+## 🚀 Panduan Instalasi & Menjalankan Aplikasi
 
 ### 1. Prasyarat Sistem
-Pastikan perangkat Anda telah terpasang:
-- **Node.js** v18.x atau lebih baru
-- **NPM** v9.x atau lebih baru
-- **MongoDB** lokal yang sedang berjalan (port default `27017`) atau akun MongoDB Atlas.
+- **Node.js**: versi 18.x atau lebih baru.
+- **NPM**: versi 9.x atau lebih baru.
+- **MongoDB**: MongoDB Atlas (Cloud) atau MongoDB Local (Port 27017).
 
 ### 2. Kloning Repositori
 ```bash
@@ -44,75 +76,152 @@ git clone https://github.com/farishilhams/Sakuin.git
 cd Sakuin
 ```
 
-### 3. Pasang Dependensi
+### 3. Pasang Seluruh Dependensi
 ```bash
 npm install
 ```
 
-### 4. Konfigurasi Variabel Lingkungan
+### 4. Konfigurasi Variabel Lingkungan (`.env`)
 Salin file template `.env.example` menjadi `.env`:
 ```bash
 cp .env.example .env
 ```
-Sesuaikan konfigurasi kredensial Anda pada file `.env`:
-```env
-# Server
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/sakuin
-JWT_SECRET=rahasia_jwt_anda_minimal_32_karakter
-SESSION_SECRET=rahasia_session_anda
-CLIENT_URL=http://localhost:5173
-NODE_ENV=development
 
-# Google OAuth 2.0 (Opsional)
-GOOGLE_CLIENT_ID=client_id_dari_google_cloud_console
-GOOGLE_CLIENT_SECRET=client_secret_dari_google_cloud_console
+Isi konfigurasi sesuai panduan berikut:
+
+```env
+# --- SERVER BACKEND ---
+PORT=5000
+NODE_ENV=development
+CLIENT_URL=http://localhost:5173
+
+# --- DATABASE MONGODB ---
+# Pilih salah satu: MongoDB Atlas (Cloud) atau MongoDB Lokal
+MONGODB_URI=mongodb://127.0.0.1:27017/sakuin
+
+# --- AUTENTIKASI JWT & SESSION ---
+JWT_SECRET=rahasia_jwt_sakuin_farish_2026
+JWT_EXPIRES_IN=7d
+SESSION_SECRET=rahasia_session_sakuin_farish_ilham_syahrani
+
+# --- GOOGLE OAUTH 2.0 (FARISH ILHAM SYAHRANI) ---
+GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-google-client-secret
 GOOGLE_CALLBACK_URL=http://localhost:5000/api/auth/google/callback
 
-# Client
+# --- CLIENT FRONTEND (VITE) ---
+VITE_API_BASE_URL=http://localhost:5000/api
 VITE_PUBLIC_API_URL=http://localhost:5000/api
-VITE_PUBLIC_MAINTENANCE_MODE=false
+VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 ```
 
-### 5. Menjalankan Aplikasi
-Jalankan backend server dan frontend client secara bersamaan:
+---
+
+## 🌐 Panduan Penyambungan Database MongoDB
+
+Jika registrasi/login gagal dengan status database belum tersambung, ikuti panduan ini:
+
+### Opsi A: Menggunakan MongoDB Atlas (Cloud — Direkomendasikan)
+1. Buka [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) dan masuk ke akun Anda.
+2. Buat cluster gratis (**M0 Free Tier**).
+3. Buat **Database User**:
+   - Masuk ke menu **Security** > **Database Access**.
+   - Klik **Add New Database User**.
+   - Pilih Authentication Method: **Password**. Masukkan username & password (catat password ini).
+   - Berikan role **Built-in Role: Read and write to any database**.
+4. Atur **Network Access** (PENTING):
+   - Masuk ke menu **Security** > **Network Access**.
+   - Klik **Add IP Address**.
+   - Masukkan `0.0.0.0/0` (Allow Access from Anywhere) lalu klik **Confirm**.
+5. Salin Connection String:
+   - Masuk ke menu **Deployment** > **Database**.
+   - Klik tombol **Connect** pada cluster Anda -> Pilih **Drivers (Node.js)**.
+   - Salin URI yang diberikan dan tempelkan ke `MONGODB_URI` di file `.env`:
+     ```env
+     MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/sakuin?retryWrites=true&w=majority
+     ```
+     *(Ganti `<username>` dan `<password>` dengan database user yang Anda buat di Langkah 3).*
+
+### Opsi B: Menggunakan MongoDB Lokal (Windows / Laragon)
+1. Pastikan service MongoDB telah terpasang dan aktif di komputer Anda:
+   ```bash
+   mongod --version
+   ```
+2. Isi `MONGODB_URI` di file `.env`:
+   ```env
+   MONGODB_URI=mongodb://127.0.0.1:27017/sakuin
+   ```
+
+---
+
+## 🔑 Panduan Konfigurasi Google OAuth 2.0 (Farish Ilham Syahrani)
+
+Untuk mengaktifkan tombol **Masuk dengan Akun Google**:
+
+1. Buka [Google Cloud Console](https://console.cloud.google.com/).
+2. Buat project baru bernama **Sakuin**.
+3. Atur **OAuth consent screen**:
+   - User Type: **External**.
+   - App name: **Sakuin**.
+   - User support email: `farishilham.s@gmail.com`.
+   - Developer contact email: `farishilham.s@gmail.com`.
+   - Scopes: `.../auth/userinfo.email`, `.../auth/userinfo.profile`, `openid`.
+4. Buat **Credentials**:
+   - Klik **Create Credentials** > **OAuth client ID**.
+   - Application type: **Web application**.
+   - Name: **Sakuin Client**.
+   - **Authorized JavaScript origins**:
+     - `http://localhost:5173`
+   - **Authorized redirect URIs**:
+     - `http://localhost:5000/api/auth/google/callback`
+5. Salin **Client ID** dan **Client Secret** ke file `.env`:
+   ```env
+   GOOGLE_CLIENT_ID=xxxxxxxxxxxx.apps.googleusercontent.com
+   GOOGLE_CLIENT_SECRET=GOCSPX-xxxxxxxxxxxx
+   ```
+
+---
+
+## 💻 Menjalankan Server & Client
+
+Jalankan backend dan frontend secara serentak dalam satu perintah:
 ```bash
 npm run dev
 ```
 
-Aplikasi dapat diakses melalui:
-- **Frontend Client**: `http://localhost:5173`
-- **Backend API**: `http://localhost:5000/api`
+- **Frontend Client**: [http://localhost:5173](http://localhost:5173)
+- **Backend API**: [http://localhost:5000/api](http://localhost:5000/api)
+- **API Health Check**: [http://localhost:5000/api/health-check](http://localhost:5000/api/health-check)
 
 ---
 
-## 📁 Struktur Repositori
+## 📁 Struktur Direktori Proyek
 
 ```
 Sakuin/
-├── config/              # Konfigurasi Database Mongoose & Passport Google OAuth
-├── controllers/         # Handler endpoint API (Auth, Budget, Transaksi, Wishlist)
-├── middleware/          # JWT Verification & Proteksi Rute
-├── models/              # Schema Mongoose (User, Budget, Transaction, Wishlist, dll)
-├── routes/              # Definisi REST API Endpoints
-├── public/              # Aset statis & Web App Manifest
+├── config/              # Konfigurasi database db.js (auto-reconnect) & passport.js
+├── controllers/         # Handler REST API (auth, budget, history, pemasukan, transaction, wishlist)
+├── middleware/          # authMiddleware.js (JWT verify)
+├── models/              # Skema Mongoose: User, Wallet, Transaction, Budget, Wishlist, History
+├── routes/              # Express API route endpoints
+├── public/              # Aset statis & PWA manifest
 ├── src/
-│   ├── assets/          # Ilustrasi & Ikon lokal
-│   ├── components/      # Komponen UI modern (Header, Numpad, Modals, Cards)
+│   ├── components/      # Komponen UI: Header, BottomNav, Modals, Tables, Cards
 │   ├── context/         # AuthContext & ThemeContext
-│   ├── pages/           # Halaman Dashboard, Wishlist, Login
-│   ├── utils/           # Axios instance & OCR Receipt Parser
-│   ├── App.jsx          # Routing & Layout Providers
-│   └── index.css        # Token desain, Poppins typography & Glassmorphism
-├── server.js            # Entry point Express API Server
-└── package.json         # Konfigurasi script & dependensi
+│   ├── pages/           # Dashboard (Arus Kas), DashboardWishlist, Login
+│   ├── utils/           # Axios instance api.js & OCR receiptParser.js
+│   ├── App.jsx          # Router & Providers
+│   └── index.css        # Tailwind CSS v4 tokens, Poppins font, Clean Fintech
+├── server.js            # Express server (Helmet, Rate Limit, Mongo Sanitize)
+├── README.md            # Dokumentasi resmi Sakuin
+└── package.json         # Konfigurasi dependensi MERN
 ```
 
 ---
 
 ## 👤 Pemilik & Pengembang
 
-Dikembangkan dan dipelihara secara aktif oleh:
+Dikembangkan dan dipelihara secara resmi oleh:
 - **Nama**: Farish Ilham Syahrani
 - **GitHub**: [@farishilhams](https://github.com/farishilhams)
 - **Email**: [farishilham.s@gmail.com](mailto:farishilham.s@gmail.com)

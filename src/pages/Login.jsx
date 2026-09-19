@@ -13,6 +13,8 @@ import {
    Target,
    ShieldCheck,
    Loader2,
+   Eye,
+   EyeOff,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -33,7 +35,10 @@ const Login = () => {
       name: "",
       email: "",
       password: "",
+      confirmPassword: "",
    });
+   const [showPassword, setShowPassword] = useState(false);
+   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
    const [showTutorial, setShowTutorial] = useState(false);
    const [localAuthError, setLocalAuthError] = useState(null);
    const [validationErrors, setValidationErrors] = useState({});
@@ -94,6 +99,14 @@ const Login = () => {
          errors.password = "Kata sandi wajib diisi";
       } else if (isRegister && formData.password.length < 6) {
          errors.password = "Kata sandi minimal 6 karakter";
+      }
+
+      if (isRegister) {
+         if (!formData.confirmPassword) {
+            errors.confirmPassword = "Konfirmasi kata sandi wajib diisi";
+         } else if (formData.password !== formData.confirmPassword) {
+            errors.confirmPassword = "Konfirmasi kata sandi tidak cocok";
+         }
       }
 
       setValidationErrors(errors);
@@ -272,7 +285,7 @@ const Login = () => {
                            value={formData.name}
                            onChange={handleChange}
                            className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
-                           placeholder="Farish Ilham Syahrani"
+                           placeholder="Masukkan nama lengkap"
                         />
                         {validationErrors.name && (
                            <p className="text-[11px] text-rose-500 mt-1 font-medium">
@@ -292,7 +305,7 @@ const Login = () => {
                         value={formData.email}
                         onChange={handleChange}
                         className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
-                        placeholder="nama@email.com"
+                        placeholder="Masukkan alamat email"
                      />
                      {validationErrors.email && (
                         <p className="text-[11px] text-rose-500 mt-1 font-medium">
@@ -305,20 +318,73 @@ const Login = () => {
                      <label className="block mb-1.5 text-xs font-semibold text-[var(--color-ink)]">
                         Kata Sandi
                      </label>
-                     <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
-                        placeholder="••••••••"
-                     />
+                     <div className="relative">
+                        <input
+                           type={showPassword ? "text" : "password"}
+                           name="password"
+                           value={formData.password}
+                           onChange={handleChange}
+                           className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl pl-3.5 pr-11 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
+                           placeholder="Masukkan kata sandi"
+                        />
+                        <button
+                           type="button"
+                           onClick={() => setShowPassword((prev) => !prev)}
+                           className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] p-1 rounded-lg transition-colors cursor-pointer"
+                           aria-label={showPassword ? "Sembunyikan kata sandi" : "Lihat kata sandi"}
+                        >
+                           {showPassword ? (
+                              <EyeOff size={16} className="stroke-[2]" />
+                           ) : (
+                              <Eye size={16} className="stroke-[2]" />
+                           )}
+                        </button>
+                     </div>
                      {validationErrors.password && (
                         <p className="text-[11px] text-rose-500 mt-1 font-medium">
                            {validationErrors.password}
                         </p>
                      )}
                   </div>
+
+                  {isRegister && (
+                     <div>
+                        <label className="block mb-1.5 text-xs font-semibold text-[var(--color-ink)]">
+                           Konfirmasi Kata Sandi
+                        </label>
+                        <div className="relative">
+                           <input
+                              type={showConfirmPassword ? "text" : "password"}
+                              name="confirmPassword"
+                              value={formData.confirmPassword}
+                              onChange={handleChange}
+                              className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl pl-3.5 pr-11 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
+                              placeholder="Masukkan konfirmasi kata sandi"
+                           />
+                           <button
+                              type="button"
+                              onClick={() => setShowConfirmPassword((prev) => !prev)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] p-1 rounded-lg transition-colors cursor-pointer"
+                              aria-label={
+                                 showConfirmPassword
+                                    ? "Sembunyikan konfirmasi kata sandi"
+                                    : "Lihat konfirmasi kata sandi"
+                              }
+                           >
+                              {showConfirmPassword ? (
+                                 <EyeOff size={16} className="stroke-[2]" />
+                              ) : (
+                                 <Eye size={16} className="stroke-[2]" />
+                              )}
+                           </button>
+                        </div>
+                        {validationErrors.confirmPassword && (
+                           <p className="text-[11px] text-rose-500 mt-1 font-medium">
+                              {validationErrors.confirmPassword}
+                           </p>
+                        )}
+                     </div>
+                  )}
 
                   {/* Submit Button */}
                   <motion.button

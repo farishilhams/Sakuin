@@ -72,7 +72,7 @@ app.use(
       resave: false,
       saveUninitialized: false,
       store: MongoStore.create({
-         mongoUrl: process.env.MONGO_URI || "mongodb://localhost:27017/sakuin",
+         mongoUrl: process.env.MONGODB_URI || process.env.MONGO_URI || "mongodb://127.0.0.1:27017/sakuin",
          collectionName: "sessions",
          ttl: 24 * 60 * 60, // 1 hari
       }),

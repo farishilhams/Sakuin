@@ -11,6 +11,9 @@ import WelcomeMessage from "../components/WelcomeMessage";
 import toast from "react-hot-toast";
 import StatsCardKeuangan from "../components/StatsCardKeuangan";
 import QuickAddTransactionButton from "../components/QuickAddTransactionButton";
+import BottomNav from "../components/BottomNav";
+import TransactionModal from "../components/TransactionModal";
+import ReceiptScannerModal from "../components/ReceiptScannerModal";
 
 const Dashboard = () => {
    const { user, logout } = useContext(AuthContext);
@@ -23,6 +26,8 @@ const Dashboard = () => {
 
    const [historyUpdateCounter, setHistoryUpdateCounter] = useState(0);
    const [showHistoryModal, setShowHistoryModal] = useState(false);
+   const [showMobileQuickAdd, setShowMobileQuickAdd] = useState(false);
+   const [showMobileScanner, setShowMobileScanner] = useState(false);
 
    const [actualSpending, setActualSpending] = useState({
       Makanan: 0,
@@ -187,14 +192,49 @@ const Dashboard = () => {
             />
          )}
 
-         {/* Quick Add FAB & Speed Dial */}
+         {/* Quick Add FAB & Speed Dial (Desktop & Tablet) */}
          <QuickAddTransactionButton
             refreshTransactions={setTransactions}
             isScrolled={isScrolled}
          />
 
+         {/* Mobile Bottom Navigation Bar (< 768px) */}
+         <BottomNav
+            onOpenQuickAdd={() => setShowMobileQuickAdd(true)}
+            onOpenScanner={() => setShowMobileScanner(true)}
+            onLogout={logout}
+         />
+
+         {/* Mobile Direct Quick Add Modal */}
+         {showMobileQuickAdd && (
+            <TransactionModal
+               onClose={() => setShowMobileQuickAdd(false)}
+               editData={null}
+               refreshTransactions={(newTx) => {
+                  if (newTx && Array.isArray(newTx)) {
+                     setTransactions(newTx);
+                  } else if (newTx) {
+                     setTransactions((prev) => [newTx, ...prev]);
+                  }
+                  setShowMobileQuickAdd(false);
+               }}
+            />
+         )}
+
+         {/* Mobile Direct Scanner Modal */}
+         {showMobileScanner && (
+            <ReceiptScannerModal
+               isOpen={showMobileScanner}
+               onClose={() => setShowMobileScanner(false)}
+               onTransactionSaved={(newTx) => {
+                  if (newTx) setTransactions((prev) => [newTx, ...prev]);
+                  setShowMobileScanner(false);
+               }}
+            />
+         )}
+
          {/* Footer */}
-         <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)] py-5 mt-12 transition-colors">
+         <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)] py-5 mt-12 mb-16 md:mb-0 transition-colors">
             <div className="max-w-7xl mx-auto px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[var(--color-ink-muted)]">
                <div className="flex items-center gap-2 font-medium">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />

@@ -5,30 +5,33 @@ const TransactionSchema = new mongoose.Schema(
       userId: {
          type: mongoose.Schema.Types.ObjectId,
          ref: "User",
-         required: true,
+         required: [true, "User ID wajib diisi"],
          index: true,
       },
       name: {
          type: String,
-         required: true,
+         required: [true, "Nama transaksi wajib diisi"],
          trim: true,
       },
       category: {
          type: String,
-         enum: [
-            "Makanan",
-            "Transportasi",
-            "Hiburan",
-            "Kesehatan",
-            "Pendidikan",
-            "Kebutuhan Pribadi",
-         ],
-         required: true,
+         enum: {
+            values: [
+               "Makanan",
+               "Transportasi",
+               "Hiburan",
+               "Kesehatan",
+               "Pendidikan",
+               "Kebutuhan Pribadi",
+            ],
+            message: "Kategori {VALUE} tidak didukung",
+         },
+         required: [true, "Kategori transaksi wajib diisi"],
       },
       amount: {
          type: Number,
-         required: true,
-         min: 0,
+         required: [true, "Nominal transaksi wajib diisi"],
+         min: [0, "Nominal tidak boleh negatif"],
       },
       date: {
          type: Date,
@@ -42,7 +45,18 @@ const TransactionSchema = new mongoose.Schema(
       },
       wallet: {
          type: String,
-         enum: ["Tunai", "BCA", "Mandiri", "BRI", "BNI", "GoPay", "OVO", "ShopeePay", "DANA", "Lainnya"],
+         enum: [
+            "Tunai",
+            "BCA",
+            "Mandiri",
+            "BRI",
+            "BNI",
+            "GoPay",
+            "OVO",
+            "ShopeePay",
+            "DANA",
+            "Lainnya",
+         ],
          default: "Tunai",
       },
       notes: {
@@ -60,7 +74,7 @@ const TransactionSchema = new mongoose.Schema(
    }
 );
 
-// Compound indexing for fast daily queries and analytics
+// Compound indexing untuk pencarian transaksi harian dan analitik performa tinggi
 TransactionSchema.index({ userId: 1, date: -1 });
 TransactionSchema.index({ userId: 1, category: 1 });
 TransactionSchema.index({ userId: 1, type: 1 });

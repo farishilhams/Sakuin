@@ -168,7 +168,7 @@ const WishlistModal = ({ isOpen, onClose, onSave, item }) => {
                      className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
                      value={name}
                      onChange={(e) => setName(e.target.value)}
-                     placeholder="Misal: Mechanical Keyboard Keychron V1"
+                     placeholder="Masukkan nama lengkap barang impian"
                      required
                   />
                </div>
@@ -187,7 +187,7 @@ const WishlistModal = ({ isOpen, onClose, onSave, item }) => {
                         className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl py-2.5 pl-10 pr-3.5 font-mono text-sm sm:text-base tabular-nums focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
                         value={displayPrice}
                         onChange={handlePriceChange}
-                        placeholder="0"
+                        placeholder="Masukkan nominal (Rp)"
                         required
                      />
                   </div>
@@ -202,7 +202,7 @@ const WishlistModal = ({ isOpen, onClose, onSave, item }) => {
                      className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl p-3 text-xs sm:text-sm min-h-20 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
                      value={description}
                      onChange={(e) => setDescription(e.target.value)}
-                     placeholder="Tuliskan catatan detail kebutuhan atau target tanggal pembelian..."
+                     placeholder="Masukkan catatan alasan pembelian (opsional)..."
                      required
                   />
                </div>
@@ -217,7 +217,7 @@ const WishlistModal = ({ isOpen, onClose, onSave, item }) => {
                      className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
                      value={purchaseLink}
                      onChange={(e) => setPurchaseLink(e.target.value)}
-                     placeholder="https://tokopedia.com/..."
+                     placeholder="Masukkan link produk (opsional)"
                      required
                   />
                </div>
@@ -232,7 +232,7 @@ const WishlistModal = ({ isOpen, onClose, onSave, item }) => {
                      className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
                      value={imageUrls}
                      onChange={(e) => setImageUrls(e.target.value)}
-                     placeholder="https://images.unsplash.com/..."
+                     placeholder="Masukkan tautan foto produk (opsional)"
                   />
                </div>
 

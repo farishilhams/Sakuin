@@ -1,0 +1,102 @@
+import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { LayoutDashboard, Target, Plus, Receipt, LogOut } from "lucide-react";
+import { motion } from "framer-motion";
+import ThemeSwitcher from "./ThemeSwitcher";
+
+export default function BottomNav({ onOpenQuickAdd, onOpenScanner, onLogout }) {
+   const navigate = useNavigate();
+   const location = useLocation();
+
+   const isDashboard = location.pathname === "/";
+   const isWishlist = location.pathname === "/wishlist";
+
+   return (
+      <nav
+         aria-label="Navigasi Utama Ponsel"
+         className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[var(--color-surface)]/95 backdrop-blur-xl border-t border-[var(--color-border)] px-3 py-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(0,0,0,0.06)] select-none transition-colors"
+      >
+         <div className="max-w-md mx-auto flex items-center justify-around relative">
+            {/* 1. Arus Kas (Dashboard) */}
+            <button
+               type="button"
+               onClick={() => navigate("/")}
+               className={`flex flex-col items-center justify-center flex-1 py-1 transition-all cursor-pointer ${
+                  isDashboard
+                     ? "text-emerald-600 dark:text-emerald-400 font-semibold"
+                     : "text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
+               }`}
+            >
+               <div className="relative">
+                  <LayoutDashboard size={20} className="stroke-[2.2]" />
+                  {isDashboard && (
+                     <motion.div
+                        layoutId="bottom-nav-dot"
+                        className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500"
+                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                     />
+                  )}
+               </div>
+               <span className="text-[10px] mt-1 font-medium tracking-tight">Arus Kas</span>
+            </button>
+
+            {/* 2. Target Wishlist */}
+            <button
+               type="button"
+               onClick={() => navigate("/wishlist")}
+               className={`flex flex-col items-center justify-center flex-1 py-1 transition-all cursor-pointer ${
+                  isWishlist
+                     ? "text-emerald-600 dark:text-emerald-400 font-semibold"
+                     : "text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
+               }`}
+            >
+               <div className="relative">
+                  <Target size={20} className="stroke-[2.2]" />
+                  {isWishlist && (
+                     <motion.div
+                        layoutId="bottom-nav-dot"
+                        className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500"
+                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                     />
+                  )}
+               </div>
+               <span className="text-[10px] mt-1 font-medium tracking-tight">Wishlist</span>
+            </button>
+
+            {/* 3. Central Hero Quick Add (+) Button */}
+            <div className="flex-1 flex justify-center -mt-5">
+               <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92 }}
+                  onClick={onOpenQuickAdd}
+                  className="w-13 h-13 rounded-2xl bg-gradient-to-tr from-emerald-600 via-emerald-500 to-teal-400 text-white shadow-lg shadow-emerald-500/35 flex items-center justify-center border-2 border-[var(--color-surface)] cursor-pointer"
+                  title="Catat Pengeluaran Sat-Set"
+                  aria-label="Catat Pengeluaran Cepat"
+               >
+                  <Plus size={24} className="stroke-[2.8]" />
+               </motion.button>
+            </div>
+
+            {/* 4. Pindai Struk / Bukti QRIS */}
+            <button
+               type="button"
+               onClick={onOpenScanner}
+               className="flex flex-col items-center justify-center flex-1 py-1 text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] transition-all cursor-pointer"
+               title="Pindai Struk & Bukti Transaksi"
+            >
+               <Receipt size={20} className="stroke-[2.2]" />
+               <span className="text-[10px] mt-1 font-medium tracking-tight">Pindai</span>
+            </button>
+
+            {/* 5. Theme Switcher */}
+            <div className="flex flex-col items-center justify-center flex-1 py-1">
+               <ThemeSwitcher />
+               <span className="text-[10px] mt-0.5 font-medium tracking-tight text-[var(--color-ink-muted)]">
+                  Mode
+               </span>
+            </div>
+         </div>
+      </nav>
+   );
+}

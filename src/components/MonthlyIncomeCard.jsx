@@ -59,7 +59,7 @@ const MonthlyIncomeCard = ({ monthlyIncome, setMonthlyIncome }) => {
                   </span>
                   <input
                      type="number"
-                     placeholder="0"
+                     placeholder="Masukkan nominal (Rp)"
                      value={incomeValue}
                      onChange={(e) => setIncomeValue(e.target.value)}
                      className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl py-2.5 pl-10 pr-4 font-mono text-sm sm:text-base tabular-nums focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"

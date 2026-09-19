@@ -135,6 +135,9 @@ const TransactionModal = ({ onClose, editData, refreshTransactions }) => {
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-t-3xl sm:rounded-3xl shadow-2xl w-full max-w-lg max-h-[92vh] flex flex-col overflow-hidden"
          >
+            {/* Drag handle for mobile bottom sheet */}
+            <div className="sm:hidden w-12 h-1.5 bg-[var(--color-border)] rounded-full mx-auto mt-2.5 mb-1" />
+
             {/* Modal Header */}
             <div className="p-5 border-b border-[var(--color-border)] flex items-center justify-between">
                <div>
@@ -160,7 +163,7 @@ const TransactionModal = ({ onClose, editData, refreshTransactions }) => {
                {/* Nominal Utama (Hero Input) */}
                <div>
                   <label className="block mb-1 text-xs font-semibold text-[var(--color-ink)]">
-                     Nominal Pengeluaran
+                     Nominal Transaksi
                   </label>
                   <div className="relative">
                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-base sm:text-lg font-bold text-emerald-600 dark:text-emerald-400">
@@ -172,7 +175,7 @@ const TransactionModal = ({ onClose, editData, refreshTransactions }) => {
                         value={displayAmount}
                         onChange={handleAmountChange}
                         className="w-full border-2 border-emerald-500/40 bg-[var(--color-bg)] text-[var(--color-ink)] rounded-2xl py-3 pl-12 pr-4 font-mono text-xl sm:text-2xl font-bold tabular-nums focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all"
-                        placeholder="0"
+                        placeholder="Masukkan nominal (Rp)"
                         required
                      />
                   </div>
@@ -207,7 +210,7 @@ const TransactionModal = ({ onClose, editData, refreshTransactions }) => {
                {/* Nama Transaksi */}
                <div>
                   <label className="block mb-1.5 text-xs font-semibold text-[var(--color-ink)]">
-                     Nama Transaksi / Keperluan
+                     Nama Transaksi
                   </label>
                   <input
                      type="text"
@@ -216,7 +219,7 @@ const TransactionModal = ({ onClose, editData, refreshTransactions }) => {
                         setFormData({ ...formData, name: e.target.value })
                      }
                      className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
-                     placeholder="Misal: Makan Siang Nasi Padang, Bensin, dll."
+                     placeholder="Masukkan nama transaksi"
                      required
                   />
                </div>
@@ -301,7 +304,7 @@ const TransactionModal = ({ onClose, editData, refreshTransactions }) => {
 
                   <div>
                      <label className="block mb-1 text-xs font-semibold text-[var(--color-ink)]">
-                        Catatan (Opsional)
+                        Catatan Pengeluaran
                      </label>
                      <input
                         type="text"
@@ -310,7 +313,7 @@ const TransactionModal = ({ onClose, editData, refreshTransactions }) => {
                            setFormData({ ...formData, notes: e.target.value })
                         }
                         className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
-                        placeholder="Detail tambahan..."
+                        placeholder="Masukkan catatan (opsional)"
                      />
                   </div>
                </div>
