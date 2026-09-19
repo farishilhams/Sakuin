@@ -332,10 +332,15 @@ const TransactionTable = ({
                         className="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] flex items-center justify-between gap-3"
                      >
                         <div className="flex flex-col gap-1 min-w-0">
-                           <div className="flex items-center gap-2">
+                           <div className="flex items-center gap-1.5 flex-wrap">
                               <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${catStyle}`}>
                                  {tx.category}
                               </span>
+                              {tx.wallet && (
+                                 <span className="text-[10px] text-[var(--color-ink-muted)] bg-[var(--color-surface)] px-1.5 py-0.5 rounded border border-[var(--color-border)]">
+                                    {tx.wallet}
+                                 </span>
+                              )}
                               <span className="text-[11px] text-[var(--color-ink-muted)]">
                                  {new Date(tx.date).toLocaleDateString("id-ID", {
                                     day: "numeric",
@@ -346,6 +351,11 @@ const TransactionTable = ({
                            <h4 className="font-semibold text-sm text-[var(--color-ink)] truncate">
                               {tx.name}
                            </h4>
+                           {tx.notes && (
+                              <span className="text-[11px] text-[var(--color-ink-muted)] truncate block">
+                                 {tx.notes}
+                              </span>
+                           )}
                            <p className="font-extrabold text-sm text-[var(--color-ink)] font-mono tabular-nums">
                               Rp {Number(tx.amount).toLocaleString("id-ID")}
                            </p>

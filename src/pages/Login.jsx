@@ -8,14 +8,13 @@ import {
    BookOpen,
    AlertCircle,
    Wallet,
-   ScanLine,
+   Receipt,
    PieChart,
    Target,
-   Sparkles,
-   CheckCircle2,
+   ShieldCheck,
    Loader2,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 const Login = () => {
    const {
@@ -121,16 +120,16 @@ const Login = () => {
 
    return (
       <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[var(--color-bg)] text-[var(--color-ink)]">
-         {/* Left Side: Brand Showcase & Features */}
+         {/* Left Side: Brand Showcase & Authentic Product Overview */}
          <div className="w-full lg:w-[46%] bg-gradient-to-br from-slate-900 via-slate-950 to-emerald-950 text-white p-8 sm:p-12 lg:p-16 flex flex-col justify-between relative overflow-hidden">
-            {/* Ambient background blur glow */}
-            <div className="absolute -top-24 -left-24 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
+            {/* Subtle background ambient glow */}
+            <div className="absolute -top-24 -left-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
             <div className="relative z-10">
                {/* Brand Header */}
                <div className="flex items-center gap-3 mb-10">
-                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white shadow-lg shadow-emerald-500/30">
+                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
                      <Wallet size={20} className="stroke-[2.5]" />
                   </div>
                   <div>
@@ -138,7 +137,7 @@ const Login = () => {
                         Saku<span className="text-emerald-400">in</span>
                      </span>
                      <p className="text-[10px] uppercase font-semibold tracking-wider text-emerald-400/80 mt-0.5">
-                        Kelola Uang Saku & Belanja
+                        Pencatat Pengeluaran Sat-Set
                      </p>
                   </div>
                </div>
@@ -149,60 +148,60 @@ const Login = () => {
                   transition={{ duration: 0.4 }}
                >
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-semibold mb-4">
-                     <Sparkles size={13} />
-                     <span>Versi Modern dengan AI Scanner</span>
+                     <ShieldCheck size={14} />
+                     <span>Manajemen Finansial Pribadi Terpadu</span>
                   </div>
 
                   <h1 className="font-extrabold text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-tight text-white mb-4">
-                     Catat Uang Saku, <br />
+                     Catat Pengeluaran Sat-Set, <br />
                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-300">
-                        Atur Budget Cerdas.
+                        Kendalikan Anggaran Harian.
                      </span>
                   </h1>
 
                   <p className="text-sm text-slate-300 leading-relaxed max-w-md mb-8">
-                     Dari kata <em>"masukin ke saku"</em>. Platform manajemen keuangan pribadi yang intuitif, cepat, dan rapi untuk laptop, tablet, dan ponsel Anda.
+                     Dari filosofi <em>"masukin ke saku"</em>. Solusi praktis untuk mengontrol pengeluaran harian, mencegah boncos dengan anggaran amplop, dan merencanakan barang impian dengan tenang.
                   </p>
                </motion.div>
 
-               {/* Feature highlights */}
+               {/* Authentic Feature Cards */}
                <div className="space-y-3.5 max-w-md hidden sm:block">
-                  <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs">
-                     <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-                        <ScanLine size={18} />
+                  <div className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xs">
+                     <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                        <Receipt size={18} />
                      </div>
                      <div>
-                        <h4 className="text-xs font-semibold text-white">AI Receipt / QRIS Scanner</h4>
-                        <p className="text-[11px] text-slate-400">Foto struk atau screenshot m-banking untuk catat instan.</p>
+                        <h4 className="text-xs font-semibold text-white">Pindai Bukti Transaksi Instan</h4>
+                        <p className="text-[11px] text-slate-400">Pindai struk belanja atau bukti transfer QRIS untuk pencatatan otomatis.</p>
                      </div>
                   </div>
 
-                  <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs">
-                     <div className="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center shrink-0">
+                  <div className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xs">
+                     <div className="w-9 h-9 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center shrink-0">
                         <PieChart size={18} />
                      </div>
                      <div>
-                        <h4 className="text-xs font-semibold text-white">Alokasi Budget Dinamis</h4>
-                        <p className="text-[11px] text-slate-400">Meteran real-time per pos kebutuhan bulanan.</p>
+                        <h4 className="text-xs font-semibold text-white">Alokasi Anggaran Bulanan</h4>
+                        <p className="text-[11px] text-slate-400">Meteran real-time per pos belanja agar keuangan selalu seimbang.</p>
                      </div>
                   </div>
 
-                  <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs">
-                     <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+                  <div className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xs">
+                     <div className="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
                         <Target size={18} />
                      </div>
                      <div>
-                        <h4 className="text-xs font-semibold text-white">Target Wishlist & PDF Export</h4>
-                        <p className="text-[11px] text-slate-400">Rencanakan barang impian dan unduh laporan kapan saja.</p>
+                        <h4 className="text-xs font-semibold text-white">Target Tabungan & Wishlist</h4>
+                        <p className="text-[11px] text-slate-400">Rencanakan barang impian dan unduh laporan kas PDF kapan saja.</p>
                      </div>
                   </div>
                </div>
             </div>
 
-            {/* Footer Left */}
+            {/* Product Footer Left */}
             <div className="relative z-10 pt-8 mt-8 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
-               <span>© {new Date().getFullYear()} Faris Ilham</span>
-               <span>v2.0 Modern Edition</span>
+               <span>© 2026 Sakuin. Hak Cipta Dilindungi.</span>
+               <span>Privasi & Keamanan Terjaga</span>
             </div>
          </div>
 
@@ -243,12 +242,12 @@ const Login = () => {
                {/* Title */}
                <div className="mb-6">
                   <h2 className="text-xl sm:text-2xl font-extrabold text-[var(--color-ink)] tracking-tight">
-                     {isRegister ? "Buat Akun Sakuin" : "Selamat Datang Kembali"}
+                     {isRegister ? "Mulai Catat Keuangan" : "Masuk ke Sakuin"}
                   </h2>
                   <p className="text-xs text-[var(--color-ink-muted)] mt-1">
                      {isRegister
-                        ? "Daftarkan akun gratis untuk mulai mengelola keuangan Anda."
-                        : "Masukkan email dan kata sandi Anda untuk mengakses dashboard."}
+                        ? "Daftarkan akun gratis untuk mengelola arus kas pribadi Anda."
+                        : "Gunakan email dan kata sandi terdaftar untuk membuka dashboard."}
                   </p>
                </div>
 
@@ -273,7 +272,7 @@ const Login = () => {
                            value={formData.name}
                            onChange={handleChange}
                            className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
-                           placeholder="Faris Ilham"
+                           placeholder="Farish Ilham Syahrani"
                         />
                         {validationErrors.name && (
                            <p className="text-[11px] text-rose-500 mt-1 font-medium">

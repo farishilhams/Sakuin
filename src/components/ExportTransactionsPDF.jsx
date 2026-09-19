@@ -114,7 +114,7 @@ const ExportTransactionsPDF = ({ transactions, filteredTransactions }) => {
             pdf.setTextColor(148, 163, 184);
             pdf.setFont(undefined, "normal");
             pdf.text(
-               `Halaman ${i} dari ${pageCount} — Sakuin by Faris Ilham`,
+               `Halaman ${i} dari ${pageCount} — Sakuin Laporan Arus Kas`,
                pdf.internal.pageSize.width - 20,
                pdf.internal.pageSize.height - 10,
                { align: "right" }

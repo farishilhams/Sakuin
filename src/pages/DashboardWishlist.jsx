@@ -147,7 +147,7 @@ const DashboardWishlist = () => {
                   <span>Sakuin — Target Wishlist & Tabungan Cerdas</span>
                </div>
                <div className="text-[11px]">
-                  © {new Date().getFullYear()} Faris Ilham — All Rights Reserved
+                  © {new Date().getFullYear()} Sakuin. Hak Cipta Dilindungi.
                </div>
             </div>
          </footer>

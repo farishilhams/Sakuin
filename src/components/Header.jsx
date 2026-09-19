@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ThemeSwitcher from "./ThemeSwitcher";
 import ReceiptScannerModal from "./ReceiptScannerModal";
-import { Menu, X, LogOut, Wallet, ScanLine, Sparkles } from "lucide-react";
+import { Menu, X, LogOut, Wallet, Receipt, CreditCard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Header({ logout, onTransactionSaved }) {
@@ -25,7 +25,7 @@ export default function Header({ logout, onTransactionSaved }) {
                   onClick={() => navigate("/")}
                   className="cursor-pointer flex items-center gap-2.5 select-none"
                >
-                  <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-white shadow-md shadow-emerald-500/20">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/20">
                      <Wallet size={18} className="stroke-[2.5]" />
                   </div>
                   <div className="flex flex-col">
@@ -33,7 +33,7 @@ export default function Header({ logout, onTransactionSaved }) {
                         Saku<span className="text-emerald-500">in</span>
                      </span>
                      <span className="text-[10px] font-medium tracking-wider uppercase text-[var(--color-ink-muted)]">
-                        Kelola Uang Saku
+                        Pengelola Uang Saku
                      </span>
                   </div>
                </motion.div>
@@ -44,7 +44,7 @@ export default function Header({ logout, onTransactionSaved }) {
                      {/* Nav Tab: Keuangan */}
                      <button
                         onClick={() => navigate("/")}
-                        className={`relative px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-colors duration-200 ${
+                        className={`relative px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-colors duration-200 cursor-pointer ${
                            isDashboard
                               ? "text-white"
                               : "text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
@@ -57,13 +57,13 @@ export default function Header({ logout, onTransactionSaved }) {
                               transition={{ type: "spring", stiffness: 350, damping: 30 }}
                            />
                         )}
-                        <span className="relative z-10">Keuangan</span>
+                        <span className="relative z-10">Arus Kas & Budget</span>
                      </button>
 
                      {/* Nav Tab: Wishlist */}
                      <button
                         onClick={() => navigate("/wishlist")}
-                        className={`relative px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-colors duration-200 ${
+                        className={`relative px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-colors duration-200 cursor-pointer ${
                            isWishlist
                               ? "text-white"
                               : "text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
@@ -76,24 +76,20 @@ export default function Header({ logout, onTransactionSaved }) {
                               transition={{ type: "spring", stiffness: 350, damping: 30 }}
                            />
                         )}
-                        <span className="relative z-10">Wishlist</span>
+                        <span className="relative z-10">Target Wishlist</span>
                      </button>
                   </div>
 
-                  {/* AI Receipt / QRIS Scanner CTA Button */}
+                  {/* Receipt / QRIS Scanner CTA Button */}
                   <motion.button
                      whileHover={{ scale: 1.03 }}
                      whileTap={{ scale: 0.97 }}
                      onClick={() => setIsScannerOpen(true)}
-                     className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-medium text-xs shadow-md shadow-emerald-500/20 hover:shadow-lg hover:shadow-emerald-500/30 transition-all cursor-pointer"
-                     title="Scan Struk / Bukti QRIS dengan AI"
+                     className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold text-xs shadow-md shadow-emerald-600/20 hover:shadow-lg transition-all cursor-pointer"
+                     title="Pindai Struk atau Bukti Transfer QRIS"
                   >
-                     <ScanLine size={15} className="stroke-[2.5]" />
-                     <span>Scan AI</span>
-                     <span className="flex items-center gap-0.5 text-[10px] bg-white/20 px-1.5 py-0.5 rounded-md font-bold">
-                        <Sparkles size={10} />
-                        QRIS
-                     </span>
+                     <Receipt size={15} className="stroke-[2.2]" />
+                     <span>Pindai Struk</span>
                   </motion.button>
 
                   {/* Theme Switcher */}
@@ -117,11 +113,11 @@ export default function Header({ logout, onTransactionSaved }) {
                   <motion.button
                      whileTap={{ scale: 0.92 }}
                      onClick={() => setIsScannerOpen(true)}
-                     className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-medium shadow-xs"
-                     aria-label="Scan Struk AI"
+                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-xs font-medium shadow-xs"
+                     aria-label="Pindai Struk"
                   >
-                     <ScanLine size={15} />
-                     <span className="font-semibold text-[11px]">Scan</span>
+                     <Receipt size={15} />
+                     <span className="font-semibold text-xs">Pindai</span>
                   </motion.button>
 
                   <div className="border border-[var(--color-border)] rounded-xl bg-[var(--color-surface)]">
@@ -155,11 +151,11 @@ export default function Header({ logout, onTransactionSaved }) {
                         }}
                         className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
                            isDashboard
-                              ? "bg-emerald-500 text-white shadow-xs"
+                              ? "bg-emerald-600 text-white shadow-xs"
                               : "bg-[var(--color-surface)] text-[var(--color-ink)] border border-[var(--color-border)]"
                         }`}
                      >
-                        <span>Keuangan & Anggaran</span>
+                        <span>Arus Kas & Anggaran</span>
                         {isDashboard && <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full">Aktif</span>}
                      </button>
 
@@ -170,7 +166,7 @@ export default function Header({ logout, onTransactionSaved }) {
                         }}
                         className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
                            isWishlist
-                              ? "bg-emerald-500 text-white shadow-xs"
+                              ? "bg-emerald-600 text-white shadow-xs"
                               : "bg-[var(--color-surface)] text-[var(--color-ink)] border border-[var(--color-border)]"
                         }`}
                      >
@@ -183,13 +179,12 @@ export default function Header({ logout, onTransactionSaved }) {
                            setIsMenuOpen(false);
                            setIsScannerOpen(true);
                         }}
-                        className="flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-xs"
+                        className="flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-xs"
                      >
                         <span className="flex items-center gap-2">
-                           <ScanLine size={16} />
-                           Scan AI Struk / QRIS
+                           <Receipt size={16} />
+                           Pindai Bukti Struk & QRIS
                         </span>
-                        <Sparkles size={14} />
                      </button>
 
                      <button

@@ -11,7 +11,8 @@ Arti Nama         : Singkat, ramah di telinga, dari kata "masukin ke saku" atau 
 Deskripsi Singkat : Aplikasi pencatatan dan pengelolaan uang saku pribadi dengan alokasi anggaran bulanan,
                     pengarsipan otomatis akhir bulan, dan tracking wishlist barang.
 Tipe              : Web App (Vite + React SPA PWA-Ready) & REST API (Express + MongoDB)
-Desain Sistem     : Dual-Mode Industrial Brutalism (Swiss Industrial Print / Tactical Telemetry)
+Desain Sistem     : Modern Financial Elegance (Clean Fintech, Google Font Poppins, Framer Motion)
+Maintainer        : Farish Ilham Syahrani (https://github.com/farishilhams/Sakuin)
 ```
 
 ---
@@ -33,13 +34,15 @@ AI **wajib membaca file terkait sebelum melakukan modifikasi**, bukan membuat ko
 ## 3. Tech Stack Tetap (Jangan Diganti Tanpa Diskusi)
 ```
 Backend          : Node.js (CommonJS), Express.js v4.21.2
-Database         : MongoDB dengan Mongoose v8.10.1
+Keamanan Backend : Helmet, Express Rate Limit, Express Mongo Sanitize, CORS
+Database         : MongoDB dengan Mongoose v8.10.1 (Compound Indexes)
 Autentikasi      : JWT (jsonwebtoken v9) + Passport.js v0.7 (Google OAuth 2.0)
-Frontend         : React v19.0.0, Vite v6.1.0, React Router DOM v7.2.0
-Styling          : Tailwind CSS v4 (@tailwindcss/vite) + Industrial Brutalism CSS Variables
+Frontend         : React v19.0.0, Vite v6.4.3, React Router DOM v7.2.0
+Styling & Font   : Tailwind CSS v4 (@tailwindcss/vite) + Google Font Poppins
+Animasi          : Framer Motion v12
 Icons & Toast    : Lucide React v1.40.0, react-hot-toast v2.5.2
 Dokumen Ekspor   : jsPDF v3.0.0, jspdf-autotable v5.0.2
-PWA Support      : vite-plugin-pwa v0.21.1
+PWA Support      : vite-plugin-pwa v0.21.2
 ```
 
 ---

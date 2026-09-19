@@ -77,9 +77,21 @@ const TransactionTableBody = ({
                         })}
                      </td>
 
-                     {/* Name */}
+                     {/* Name & Wallet */}
                      <td className="py-3 px-4 font-medium text-[var(--color-ink)]">
-                        {tx.name}
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                           <span>{tx.name}</span>
+                           {tx.wallet && (
+                              <span className="text-[10px] text-[var(--color-ink-muted)] bg-[var(--color-bg)] px-1.5 py-0.5 rounded border border-[var(--color-border)]">
+                                 {tx.wallet}
+                              </span>
+                           )}
+                        </div>
+                        {tx.notes && (
+                           <span className="text-[11px] text-[var(--color-ink-muted)] block truncate max-w-xs mt-0.5">
+                              {tx.notes}
+                           </span>
+                        )}
                      </td>
 
                      {/* Category badge */}

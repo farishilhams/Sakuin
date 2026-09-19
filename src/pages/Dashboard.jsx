@@ -201,7 +201,7 @@ const Dashboard = () => {
                   <span>Sakuin — Kelola Uang Saku & Anggaran Cerdas</span>
                </div>
                <div className="text-[11px]">
-                  © {new Date().getFullYear()} Faris Ilham — All Rights Reserved
+                  © {new Date().getFullYear()} Sakuin. Hak Cipta Dilindungi.
                </div>
             </div>
          </footer>

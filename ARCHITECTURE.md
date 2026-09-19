@@ -1,6 +1,6 @@
 # ARCHITECTURE.md — Arsitektur & Spesifikasi Teknis Codebase
 
-> Dokumen ini mencatat arsitektur aktual, data flow, dan API contract hasil audit codebase `be-catat-pengeluaran-anda-main` dan `fe-catat-pengeluaran-anda-main`. Seluruh isi didasarkan pada kondisi nyata kode yang ada (as-is), bukan asumsi atau rancangan ideal baru.
+> Dokumen ini mencatat arsitektur aktual, data flow, spesifikasi keamanan, dan API contract platform pencatatan keuangan pribadi **Sakuin**, dimaintain oleh **Farish Ilham Syahrani** ([GitHub](https://github.com/farishilhams/Sakuin)).
 
 ---
 

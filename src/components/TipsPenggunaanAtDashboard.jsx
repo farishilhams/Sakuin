@@ -13,8 +13,8 @@ export default function TipsPenggunaanAtDashboard() {
       },
       {
          step: "02",
-         title: "Scan Struk & QRIS dengan AI",
-         desc: "Gunakan tombol Scan AI di pojok kanan bawah atau header untuk membaca struk dan QRIS otomatis.",
+         title: "Pindai Struk & Bukti QRIS",
+         desc: "Gunakan tombol Pindai Struk di pojok kanan bawah atau header untuk membaca struk dan QRIS otomatis.",
       },
       {
          step: "03",

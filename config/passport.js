@@ -19,32 +19,48 @@ passport.deserializeUser(async (id, done) => {
 passport.use(
    new GoogleStrategy(
       {
-         clientID: process.env.GOOGLE_CLIENT_ID,
-         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-         callbackURL: "/api/auth/google/callback",
+         clientID: process.env.GOOGLE_CLIENT_ID || "placeholder_client_id",
+         clientSecret: process.env.GOOGLE_CLIENT_SECRET || "placeholder_client_secret",
+         callbackURL: process.env.GOOGLE_CALLBACK_URL || "/api/auth/google/callback",
          proxy: true,
       },
       async (accessToken, refreshToken, profile, done) => {
          try {
-            // Check if user exists
-            const existingUser = await User.findOne({ googleId: profile.id });
+            const email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
+            const photo = profile.photos && profile.photos[0] ? profile.photos[0].value : "";
+
+            // 1. Cek apakah pengguna sudah pernah login Google dengan ID ini
+            let existingUser = await User.findOne({ googleId: profile.id });
 
             if (existingUser) {
                return done(null, existingUser);
             }
 
-            // If not, create new user
+            // 2. Cek apakah ada pengguna lokal dengan email yang sama untuk disambungkan
+            if (email) {
+               existingUser = await User.findOne({ email });
+               if (existingUser) {
+                  existingUser.googleId = profile.id;
+                  if (!existingUser.avatar && photo) {
+                     existingUser.avatar = photo;
+                  }
+                  await existingUser.save();
+                  return done(null, existingUser);
+               }
+            }
+
+            // 3. Buat akun baru jika belum ada
             const user = new User({
                googleId: profile.id,
-               name: profile.displayName,
-               email: profile.emails[0].value,
-               avatar: profile.photos[0].value,
+               name: profile.displayName || "Pengguna Sakuin",
+               email: email,
+               avatar: photo,
                provider: "google",
             });
 
             await user.save();
 
-            // Buat budget default seperti di register
+            // Inisialisasi 6 kategori budget awal bernilai Rp 0
             const categories = [
                "Makanan",
                "Transportasi",
@@ -64,6 +80,7 @@ passport.use(
 
             done(null, user);
          } catch (error) {
+            console.error("Google OAuth Strategy Error:", error);
             done(error, null);
          }
       }

@@ -18,7 +18,7 @@ Definisi token berada di `src/index.css` dan dikonfigurasi melalui Tailwind CSS 
 | `--color-ink` | `#0F172A` *(Slate 900)* | `#F8FAFC` *(Slate 50)* | Teks utama, judul, angka |
 | `--color-ink-muted` | `#64748B` *(Slate 500)* | `#94A3B8` *(Slate 400)* | Label sekunder, tanggal, subtitle, caption |
 | `--color-border` | `#E2E8F0` *(Slate 200)* | `#1E293B` *(Slate 800)* | Garis tepi elemen card dan pemisah |
-| `--color-accent` | `#10B981` *(Emerald 500)* | `#10B981` *(Emerald 400)* | **Warna brand primer / Action CTA / AI Scanner** |
+| `--color-accent` | `#10B981` *(Emerald 500)* | `#10B981` *(Emerald 400)* | **Warna brand primer / Action CTA / Pindai Struk OCR** |
 | `--color-accent-ink` | `#FFFFFF` | `#090D16` | Teks di atas warna aksen primer |
 | `--color-accent-secondary`| `#6366F1` *(Indigo 500)* | `#818CF8` *(Indigo 400)* | Aksen sekunder analitik dan kategori |
 | `--color-positive` | `#10B981` *(Emerald 500)* | `#34D399` *(Emerald 400)* | Pemasukan, saldo surplus, budget aman (<80%) |

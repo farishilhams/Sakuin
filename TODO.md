@@ -11,14 +11,16 @@
 
 ### High Priority
 - [x] Gabungkan nested backend & frontend ke satu repository root `Sakuin` — *selesai: 2026-09-19*
-- [x] Ubah identitas pemilik/developer dari `abdulrahemfaqih` ke `Faris Ilham` (`farishilhams`, `farishilham.s@gmail.com`) — *selesai: 2026-09-19*
-- [x] Redesign menyeluruh dengan Google Font **Poppins** dan modern rounded tokens — *selesai: 2026-09-19*
-- [x] Tambahkan animasi interaktif dengan **Framer Motion** (Nav layout pill, modal transitions, stat card hover, speed-dial FAB) — *selesai: 2026-09-19*
-- [x] Optimasi multi-device responsif (Laptop, Tablet, Android, iPhone/iOS dengan card feed mobile) — *selesai: 2026-09-19*
-- [x] Implementasi fitur **AI Receipt / QRIS Scanner (OCR)** dengan kamera langsung & upload struk/screenshot m-banking — *selesai: 2026-09-19*
-- [x] Konfigurasi environment & dokumentasi Google OAuth 2.0 untuk Faris Ilham — *selesai: 2026-09-19*
-- [x] Validasi performa build Vite (`npm run build` lolos tanpa error) — *selesai: 2026-09-19*
-- [~] Push commit ke repository GitHub `https://github.com/farishilhams/Sakuin.git`
+- [x] Migrasi identitas kepemilikan repositori ke **Farish Ilham Syahrani** (`farishilhams`, `farishilham.s@gmail.com`) — *selesai: 2026-09-19*
+- [x] Hardening keamanan backend (Helmet, Rate Limiter, Mongo Sanitize, Safe OAuth Linking) — *selesai: 2026-09-19*
+- [x] Modernisasi skema Mongoose `Transaction` dengan compound indexes dan pilihan dompet — *selesai: 2026-09-19*
+- [x] Redesign menyeluruh dengan Google Font **Poppins** dan modern clean fintech UI — *selesai: 2026-09-19*
+- [x] Animasi interaktif dengan **Framer Motion** (Nav layout pill, modal transitions, stat card hover, scale feedback) — *selesai: 2026-09-19*
+- [x] Eliminasi seluruh teks/jargon teknis pengembang (Anti-AI Slop) menjadi copywriting komersial natural — *selesai: 2026-09-19*
+- [x] Fitur Quick Expense Sat-Set (< 3 detik) dengan chip nominal instan dan pilihan sumber dana — *selesai: 2026-09-19*
+- [x] Pemindai struk & bukti QRIS OCR otomatis (`src/utils/receiptParser.js` & `ReceiptScannerModal.jsx`) — *selesai: 2026-09-19*
+- [x] Validasi performa build Vite (`npm run build` 100% lulus tanpa error) — *selesai: 2026-09-19*
+- [x] Sinkronisasi Git & remote push ke `https://github.com/farishilhams/Sakuin.git` — *selesai: 2026-09-19*
 
 ### Medium Priority / Backlog
 - [ ] Tambahkan filter tanggal rentang custom (Date range picker)

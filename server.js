@@ -2,6 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
+const rateLimit = require("express-rate-limit");
 const connectDB = require("./config/db");
 const passport = require("./config/passport");
 const session = require("express-session");
@@ -21,71 +24,100 @@ const wishlistRoutes = require("./routes/wishlistRoutes");
 connectDB();
 
 const app = express();
+
+// Trust proxy for secure cookies and rate limiter when behind reverse proxies
+app.set("trust proxy", 1);
+
+// Security Headers with Helmet
+app.use(
+   helmet({
+      crossOriginResourcePolicy: false,
+      contentSecurityPolicy: false, // Vite inline dev scripts compatibility
+   })
+);
+
+// CORS configuration
 app.use(
    cors({
       origin: process.env.CLIENT_URL || "http://localhost:5173",
-      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+      methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
       credentials: true,
       optionsSuccessStatus: 204,
    })
 );
 
-app.use(express.json());
+// Body parser & Cookie parser
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
 
-// Session must be before passport initialization
+// NoSQL Query Injection Sanitization
+app.use(mongoSanitize());
+
+// Rate Limiter for Authentication Endpoints
+const authLimiter = rateLimit({
+   windowMs: 15 * 60 * 1000, // 15 menit
+   max: 60, // maks 60 request per IP per 15 menit
+   standardHeaders: true,
+   legacyHeaders: false,
+   message: {
+      message: "Terlalu banyak percobaan autentikasi. Silakan coba lagi beberapa saat.",
+   },
+});
+
+// Session configuration
 app.use(
    session({
-      secret: process.env.SESSION_SECRET || process.env.JWT_SECRET,
+      secret: process.env.SESSION_SECRET || process.env.JWT_SECRET || "sakuin_default_session_secret_farish",
       resave: false,
       saveUninitialized: false,
       store: MongoStore.create({
-         mongoUrl: process.env.MONGO_URI,
+         mongoUrl: process.env.MONGO_URI || "mongodb://localhost:27017/sakuin",
          collectionName: "sessions",
-         ttl: 24 * 60 * 60,
+         ttl: 24 * 60 * 60, // 1 hari
       }),
       cookie: {
-         secure: true,
-         sameSite: "none",
-         maxAge: 24 * 60 * 60 * 1000, // 24 jam
-         httpOnly: true, // Menambahkan flag httpOnly untuk keamanan tambahan
+         secure: process.env.NODE_ENV === "production",
+         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+         maxAge: 24 * 60 * 60 * 1000,
+         httpOnly: true,
       },
    })
 );
-app.set("trust proxy", 1);
 
 // Initialize Passport
 app.use(passport.initialize());
 app.use(passport.session());
-app.use("/api/auth/*", (req, res, next) => {
-   res.header("Strict-Transport-Security", "max-age=31536000");
-   res.header("X-Content-Type-Options", "nosniff");
-   next();
-});
-app.use("/api/auth", authRoutes);
+
+// Mount Routes
+app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/budgets", budgetRoutes);
 app.use("/api/history", historyRoutes);
 app.use("/api/pemasukan", pemasukanRoutes);
 app.use("/api/wishlist", wishlistRoutes);
-app.get("/", (req, res) => {
-   res.send("Server is running!");
-});
 
-
+// Health check endpoint
 app.get("/api/health-check", (req, res) => {
-   console.log("Health check passed!");
-   res.status(200).json({ status: "OK" });
+   res.status(200).json({
+      status: "OK",
+      service: "Sakuin API Server",
+      timestamp: new Date().toISOString(),
+   });
 });
 
-// Error handler
+app.get("/", (req, res) => {
+   res.send("Sakuin API Server is active!");
+});
+
+// Centralized error handler
 app.use((err, req, res, next) => {
-   console.error(err.stack);
-   res.status(500).json({
-      message: 'Something went wrong!',
-      error: process.env.NODE_ENV === 'development' ? err.message : {}
+   console.error("Internal Server Error:", err.stack);
+   res.status(err.status || 500).json({
+      message: err.message || "Terjadi kesalahan pada server",
+      error: process.env.NODE_ENV === "development" ? err.stack : undefined,
    });
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Sakuin server running on port ${PORT}`));

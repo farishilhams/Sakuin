@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import TransactionModal from "./TransactionModal";
 import ReceiptScannerModal from "./ReceiptScannerModal";
 import api from "../utils/api";
-import { Plus, ScanLine, Edit3, X, Sparkles } from "lucide-react";
+import { Plus, Receipt, Edit3, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const QuickAddTransactionButton = ({ isScrolled, refreshTransactions }) => {
@@ -46,8 +46,8 @@ const QuickAddTransactionButton = ({ isScrolled, refreshTransactions }) => {
             )}
          </AnimatePresence>
 
-         {/* Speed-dial container */}
-         <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 pointer-events-none">
+         {/* Speed-dial container with mobile safe bottom */}
+         <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 pointer-events-none pb-safe">
             {/* Expanded Action Options */}
             <AnimatePresence>
                {isOpen && (
@@ -58,36 +58,33 @@ const QuickAddTransactionButton = ({ isScrolled, refreshTransactions }) => {
                      transition={{ duration: 0.2 }}
                      className="flex flex-col items-end gap-2.5 pointer-events-auto"
                   >
-                     {/* AI Receipt & QRIS Scanner Button */}
+                     {/* Receipt & QRIS Scanner Button */}
                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.96 }}
                         onClick={handleScannerClick}
-                        className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-lg shadow-emerald-600/30 hover:shadow-xl transition-all cursor-pointer group"
+                        className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-600/30 hover:shadow-xl transition-all cursor-pointer group"
                      >
-                        <span className="text-xs font-semibold tracking-wide flex items-center gap-1.5">
-                           Scan Struk / QRIS
-                           <span className="flex items-center text-[10px] bg-white/20 px-1.5 py-0.5 rounded font-bold">
-                              <Sparkles size={10} className="mr-0.5" /> AI
-                           </span>
+                        <span className="text-xs font-semibold tracking-wide">
+                           Pindai Struk / Bukti QRIS
                         </span>
                         <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
-                           <ScanLine size={16} className="text-white stroke-[2.5]" />
+                           <Receipt size={16} className="text-white stroke-[2.2]" />
                         </div>
                      </motion.button>
 
-                     {/* Manual Transaction Input */}
+                     {/* Quick Expense Manual Input */}
                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.96 }}
                         onClick={handleManualClick}
                         className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-[var(--color-surface)] text-[var(--color-ink)] border border-[var(--color-border)] shadow-lg shadow-black/5 hover:shadow-xl transition-all cursor-pointer group"
                      >
                         <span className="text-xs font-semibold tracking-wide">
-                           Catat Manual
+                           Catat Pengeluaran Sat-Set
                         </span>
                         <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-                           <Edit3 size={16} className="stroke-[2.5]" />
+                           <Edit3 size={16} className="stroke-[2.2]" />
                         </div>
                      </motion.button>
                   </motion.div>
@@ -99,7 +96,7 @@ const QuickAddTransactionButton = ({ isScrolled, refreshTransactions }) => {
                whileHover={{ scale: 1.06 }}
                whileTap={{ scale: 0.92 }}
                onClick={() => setIsOpen(!isOpen)}
-               className={`pointer-events-auto w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-white flex items-center justify-center shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all cursor-pointer ${
+               className={`pointer-events-auto w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all cursor-pointer ${
                   isScrolled && !isOpen ? "opacity-90" : "opacity-100"
                }`}
                aria-label="Menu Tambah Transaksi"
@@ -123,12 +120,14 @@ const QuickAddTransactionButton = ({ isScrolled, refreshTransactions }) => {
             />
          )}
 
-         {/* AI Receipt / QRIS Scanner Modal */}
-         <ReceiptScannerModal
-            isOpen={showScannerModal}
-            onClose={() => setShowScannerModal(false)}
-            onTransactionSaved={handleTransactionSaved}
-         />
+         {/* Receipt / QRIS Scanner Modal */}
+         {showScannerModal && (
+            <ReceiptScannerModal
+               isOpen={showScannerModal}
+               onClose={() => setShowScannerModal(false)}
+               onTransactionSaved={handleTransactionSaved}
+            />
+         )}
       </>
    );
 };
