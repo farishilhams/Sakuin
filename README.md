@@ -11,10 +11,12 @@
 
 ## 🌟 Fitur Unggulan
 
-- ⚡ **Pencatatan Cepat Sat-Set (< 3 Detik)**:
-  - Input angka nominal otomatis aktif (*auto-focus*) dengan chip nominal instan (`+10rb`, `+20rb`, `+50rb`, `+100rb`).
-  - Pemilihan kategori satu-sentuhan (Makanan, Transportasi, Hiburan, Belanja, Tagihan, Kesehatan, Pendidikan, Kebutuhan Pribadi).
-  - Pilihan multi-sumber dana (Dompet Tunai, Rekening Bank BCA/Mandiri/BRI/BNI, dan E-Wallet GoPay/OVO/ShopeePay/DANA).
+- ⚡ **Pencatatan Cepat Sat-Set (< 3 Detik, Maksimal 3 Tap)**:
+  - Custom Numpad besar bawaan (bebas hambatan keyboard layar HP) dengan chip nominal instan (`+10rb`, `+20rb`, `+50rb`, `+100rb`).
+  - Grid kategori adaptif tepat di bawah numpad (Makanan & Minuman, Transportasi, Belanja, Tagihan, Hiburan, Kesehatan, Lainnya) yang otomatis menampilkan kategori terpopuler di depan.
+  - **1-Tap Save**: Cukup tap 1 kategori, transaksi otomatis tersimpan seketika tanpa perlu mencari tombol submit terpisah.
+  - **Interactive Toast & Instant Undo**: Notifikasi ringkas dengan tombol "Undo" (3-5 detik) untuk membatalkan transaksi yang keliru tanpa konfirmasi berbelit.
+  - Pemilihan dompet cerdas dengan ingatan riwayat dompet terakhir dan opsi catatan ringkas tersembunyi.
 - 📸 **Pindai Struk & Bukti Transaksi Instan (OCR)**:
   - Ekstraksi otomatis nominal, tanggal, dan nama toko/merchant dari struk belanja atau tangkapan layar m-banking (QRIS).
 - 📊 **Dasbor Arus Kas Real-Time**:

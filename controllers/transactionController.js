@@ -16,14 +16,16 @@ const createTransaction = async (req, res) => {
    try {
       const { name, category, amount, date, type, wallet, notes, receiptUrl } = req.body;
 
-      if (!name || amount === undefined || amount === null) {
-         return res.status(400).json({ message: "Nama transaksi dan nominal wajib diisi" });
+      if (amount === undefined || amount === null || isNaN(Number(amount)) || Number(amount) <= 0) {
+         return res.status(400).json({ message: "Nominal transaksi wajib diisi dengan benar" });
       }
+
+      const finalName = (name && typeof name === "string" && name.trim()) ? name.trim() : (category || "Pengeluaran");
 
       const newTransaction = new Transaction({
          userId: req.user.userId,
-         name: name.trim(),
-         category: category || "Makanan",
+         name: finalName,
+         category: category || "Makanan & Minuman",
          amount: Number(amount),
          date: date ? new Date(date) : new Date(),
          type: type || "expense",

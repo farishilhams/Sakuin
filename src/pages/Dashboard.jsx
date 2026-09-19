@@ -69,7 +69,7 @@ const Dashboard = () => {
             setMonthlyIncome(incomeRes.data?.[0] || null);
          } catch (error) {
             console.error("Error fetching data", error);
-            toast.error("GAGAL MENGAMBIL DATA KEUANGAN");
+            toast.error("Gagal memuat data keuangan");
          } finally {
             setIsLoading(false);
          }
@@ -196,6 +196,7 @@ const Dashboard = () => {
          <QuickAddTransactionButton
             refreshTransactions={setTransactions}
             isScrolled={isScrolled}
+            transactions={transactions}
          />
 
          {/* Mobile Bottom Navigation Bar (< 768px) */}
@@ -210,6 +211,11 @@ const Dashboard = () => {
             <TransactionModal
                onClose={() => setShowMobileQuickAdd(false)}
                editData={null}
+               existingTransactions={transactions}
+               onOpenScanner={() => {
+                  setShowMobileQuickAdd(false);
+                  setShowMobileScanner(true);
+               }}
                refreshTransactions={(newTx) => {
                   if (newTx && Array.isArray(newTx)) {
                      setTransactions(newTx);

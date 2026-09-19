@@ -5,7 +5,7 @@ import api from "../utils/api";
 import { Plus, Receipt, Edit3, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const QuickAddTransactionButton = ({ isScrolled, refreshTransactions }) => {
+const QuickAddTransactionButton = ({ isScrolled, refreshTransactions, transactions = [] }) => {
    const [isOpen, setIsOpen] = useState(false);
    const [showManualModal, setShowManualModal] = useState(false);
    const [showScannerModal, setShowScannerModal] = useState(false);
@@ -116,6 +116,11 @@ const QuickAddTransactionButton = ({ isScrolled, refreshTransactions }) => {
             <TransactionModal
                onClose={() => setShowManualModal(false)}
                editData={null}
+               existingTransactions={transactions}
+               onOpenScanner={() => {
+                  setShowManualModal(false);
+                  setShowScannerModal(true);
+               }}
                refreshTransactions={handleTransactionSaved}
             />
          )}

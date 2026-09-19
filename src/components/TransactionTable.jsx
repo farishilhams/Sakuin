@@ -36,6 +36,8 @@ const TransactionTable = ({
    const [searchColumn, setSearchColumn] = useState("all");
    const [searchAmountOperator, setSearchAmountOperator] = useState("equals");
    const [searchAmountValue, setSearchAmountValue] = useState("");
+   const [categoryFilter, setCategoryFilter] = useState("all");
+   const [walletFilter, setWalletFilter] = useState("all");
    const [filteredTransactions, setFilteredTransactions] = useState([]);
 
    // Filter transactions based on search criteria
@@ -102,6 +104,17 @@ const TransactionTable = ({
          }
       }
 
+      if (categoryFilter && categoryFilter !== "all") {
+         results = results.filter((tx) => {
+            const cat = tx.category === "Makanan" ? "Makanan & Minuman" : tx.category;
+            return cat === categoryFilter;
+         });
+      }
+
+      if (walletFilter && walletFilter !== "all") {
+         results = results.filter((tx) => tx.wallet === walletFilter);
+      }
+
       setFilteredTransactions(results);
       setCurrentPage(1);
    }, [
@@ -110,6 +123,8 @@ const TransactionTable = ({
       searchColumn,
       searchAmountOperator,
       searchAmountValue,
+      categoryFilter,
+      walletFilter,
       isLoadingTransactions,
    ]);
 
@@ -197,6 +212,8 @@ const TransactionTable = ({
       setSearchColumn("all");
       setSearchAmountOperator("equals");
       setSearchAmountValue("");
+      setCategoryFilter("all");
+      setWalletFilter("all");
    };
 
    const pageNumbers = useMemo(() => {
@@ -276,6 +293,10 @@ const TransactionTable = ({
             setSearchAmountOperator={setSearchAmountOperator}
             searchAmountValue={searchAmountValue}
             setSearchAmountValue={setSearchAmountValue}
+            categoryFilter={categoryFilter}
+            setCategoryFilter={setCategoryFilter}
+            walletFilter={walletFilter}
+            setWalletFilter={setWalletFilter}
             resetFilters={resetFilters}
             showSearchFilters={showSearchFilters}
             setShowSearchFilters={setShowSearchFilters}
@@ -405,6 +426,7 @@ const TransactionTable = ({
             <TransactionModal
                onClose={() => setShowModal(false)}
                editData={editData}
+               existingTransactions={transactions}
                refreshTransactions={async () => {
                   const res = await api.get("/transactions");
                   setTransactions(res.data);
