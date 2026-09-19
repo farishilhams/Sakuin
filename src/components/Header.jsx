@@ -1,17 +1,13 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, NavLink } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import ThemeSwitcher from "./ThemeSwitcher";
 import ReceiptScannerModal from "./ReceiptScannerModal";
 import {
-   Menu,
-   X,
    LogOut,
    Wallet,
    Receipt,
    User,
-   LayoutDashboard,
-   Target,
    ShieldCheck,
    ChevronDown,
 } from "lucide-react";
@@ -23,7 +19,6 @@ export default function Header({ onTransactionSaved }) {
    const navigate = useNavigate();
    const location = useLocation();
 
-   const [isMenuOpen, setIsMenuOpen] = useState(false);
    const [isScannerOpen, setIsScannerOpen] = useState(false);
    const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
@@ -59,7 +54,6 @@ export default function Header({ onTransactionSaved }) {
       const handleKeyDown = (event) => {
          if (event.key === "Escape") {
             setIsProfileDropdownOpen(false);
-            setIsMenuOpen(false);
          }
       };
 
@@ -73,7 +67,6 @@ export default function Header({ onTransactionSaved }) {
 
    const handleLogoutClick = async () => {
       setIsProfileDropdownOpen(false);
-      setIsMenuOpen(false);
       await logout();
    };
 
@@ -101,56 +94,71 @@ export default function Header({ onTransactionSaved }) {
                   </div>
                </motion.div>
 
-               {/* Desktop Navigation Links */}
+               {/* Desktop Navigation Links (Client-Side NavLinks) */}
                <nav className="hidden md:flex items-center gap-2">
                   <div className="flex items-center bg-[var(--color-surface)] p-1 rounded-2xl border border-[var(--color-border)] shadow-xs">
-                     {/* Nav Tab: Keuangan */}
-                     <button
-                        type="button"
-                        onClick={() => navigate("/")}
-                        className={`relative px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-colors duration-200 cursor-pointer ${
-                           isDashboard
-                              ? "text-white"
-                              : "text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
-                        }`}
+                     {/* Nav Tab: Arus Kas */}
+                     <NavLink
+                        to="/"
+                        end
+                        className={({ isActive }) =>
+                           `relative px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-colors duration-200 cursor-pointer ${
+                              isActive
+                                 ? "text-white"
+                                 : "text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
+                           }`
+                        }
                      >
-                        {isDashboard && (
-                           <motion.div
-                              layoutId="active-nav-pill"
-                              className="absolute inset-0 bg-emerald-600 rounded-xl shadow-xs"
-                              transition={{
-                                 type: "spring",
-                                 stiffness: 350,
-                                 damping: 30,
-                              }}
-                           />
+                        {({ isActive }) => (
+                           <>
+                              {isActive && (
+                                 <motion.div
+                                    layoutId="active-nav-pill"
+                                    className="absolute inset-0 bg-emerald-600 rounded-xl shadow-xs"
+                                    transition={{
+                                       type: "spring",
+                                       stiffness: 350,
+                                       damping: 30,
+                                    }}
+                                 />
+                              )}
+                              <span className="relative z-10">
+                                 Arus Kas & Anggaran
+                              </span>
+                           </>
                         )}
-                        <span className="relative z-10">Arus Kas & Anggaran</span>
-                     </button>
+                     </NavLink>
 
                      {/* Nav Tab: Wishlist */}
-                     <button
-                        type="button"
-                        onClick={() => navigate("/wishlist")}
-                        className={`relative px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-colors duration-200 cursor-pointer ${
-                           isWishlist
-                              ? "text-white"
-                              : "text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
-                        }`}
+                     <NavLink
+                        to="/wishlist"
+                        className={({ isActive }) =>
+                           `relative px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-colors duration-200 cursor-pointer ${
+                              isActive
+                                 ? "text-white"
+                                 : "text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
+                           }`
+                        }
                      >
-                        {isWishlist && (
-                           <motion.div
-                              layoutId="active-nav-pill"
-                              className="absolute inset-0 bg-emerald-600 rounded-xl shadow-xs"
-                              transition={{
-                                 type: "spring",
-                                 stiffness: 350,
-                                 damping: 30,
-                              }}
-                           />
+                        {({ isActive }) => (
+                           <>
+                              {isActive && (
+                                 <motion.div
+                                    layoutId="active-nav-pill"
+                                    className="absolute inset-0 bg-emerald-600 rounded-xl shadow-xs"
+                                    transition={{
+                                       type: "spring",
+                                       stiffness: 350,
+                                       damping: 30,
+                                    }}
+                                 />
+                              )}
+                              <span className="relative z-10">
+                                 Target Wishlist
+                              </span>
+                           </>
                         )}
-                        <span className="relative z-10">Target Wishlist</span>
-                     </button>
+                     </NavLink>
                   </div>
 
                   {/* Receipt / QRIS Scanner CTA Button */}
@@ -277,7 +285,7 @@ export default function Header({ onTransactionSaved }) {
                                  </div>
                               </div>
 
-                              {/* Menu Items */}
+                              {/* Menu Actions (Zero Duplication with BottomNav) */}
                               <div className="space-y-0.5">
                                  <button
                                     type="button"
@@ -291,40 +299,11 @@ export default function Header({ onTransactionSaved }) {
                                           : "text-[var(--color-ink)] hover:bg-[var(--color-bg)]"
                                     }`}
                                  >
-                                    <User size={15} className="text-emerald-500 stroke-[2.2]" />
+                                    <User
+                                       size={15}
+                                       className="text-emerald-500 stroke-[2.2]"
+                                    />
                                     <span>Profil Akun Saya</span>
-                                 </button>
-
-                                 <button
-                                    type="button"
-                                    onClick={() => {
-                                       setIsProfileDropdownOpen(false);
-                                       navigate("/");
-                                    }}
-                                    className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
-                                       isDashboard
-                                          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                                          : "text-[var(--color-ink)] hover:bg-[var(--color-bg)]"
-                                    }`}
-                                 >
-                                    <LayoutDashboard size={15} className="text-blue-500 stroke-[2.2]" />
-                                    <span>Arus Kas & Anggaran</span>
-                                 </button>
-
-                                 <button
-                                    type="button"
-                                    onClick={() => {
-                                       setIsProfileDropdownOpen(false);
-                                       navigate("/wishlist");
-                                    }}
-                                    className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
-                                       isWishlist
-                                          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                                          : "text-[var(--color-ink)] hover:bg-[var(--color-bg)]"
-                                    }`}
-                                 >
-                                    <Target size={15} className="text-violet-500 stroke-[2.2]" />
-                                    <span>Target Wishlist</span>
                                  </button>
                               </div>
 
@@ -344,103 +323,8 @@ export default function Header({ onTransactionSaved }) {
                         )}
                      </AnimatePresence>
                   </div>
-
-                  {/* Mobile Hamburger Menu Toggle Button */}
-                  <button
-                     type="button"
-                     onClick={() => setIsMenuOpen(!isMenuOpen)}
-                     className="md:hidden p-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-ink)] active:scale-95 transition-transform cursor-pointer"
-                     aria-label="Menu navigasi"
-                  >
-                     {isMenuOpen ? <X size={18} /> : <Menu size={18} />}
-                  </button>
                </div>
             </div>
-
-            {/* Mobile Menu Dropdown (Navigation Links) */}
-            <AnimatePresence>
-               {isMenuOpen && (
-                  <motion.div
-                     initial={{ opacity: 0, height: 0 }}
-                     animate={{ opacity: 1, height: "auto" }}
-                     exit={{ opacity: 0, height: 0 }}
-                     transition={{ duration: 0.2 }}
-                     className="md:hidden overflow-hidden pt-3 border-t border-[var(--color-border)] mt-3 flex flex-col gap-2"
-                  >
-                     <button
-                        type="button"
-                        onClick={() => {
-                           navigate("/");
-                           setIsMenuOpen(false);
-                        }}
-                        className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-                           isDashboard
-                              ? "bg-emerald-600 text-white shadow-xs"
-                              : "bg-[var(--color-surface)] text-[var(--color-ink)] border border-[var(--color-border)]"
-                        }`}
-                     >
-                        <span>Arus Kas & Anggaran</span>
-                        {isDashboard && (
-                           <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full">
-                              Aktif
-                           </span>
-                        )}
-                     </button>
-
-                     <button
-                        type="button"
-                        onClick={() => {
-                           navigate("/wishlist");
-                           setIsMenuOpen(false);
-                        }}
-                        className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-                           isWishlist
-                              ? "bg-emerald-600 text-white shadow-xs"
-                              : "bg-[var(--color-surface)] text-[var(--color-ink)] border border-[var(--color-border)]"
-                        }`}
-                     >
-                        <span>Target Wishlist</span>
-                        {isWishlist && (
-                           <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full">
-                              Aktif
-                           </span>
-                        )}
-                     </button>
-
-                     <button
-                        type="button"
-                        onClick={() => {
-                           setIsMenuOpen(false);
-                           navigate("/profile");
-                        }}
-                        className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-                           isProfile
-                              ? "bg-emerald-600 text-white shadow-xs"
-                              : "bg-[var(--color-surface)] text-[var(--color-ink)] border border-[var(--color-border)]"
-                        }`}
-                     >
-                        <span className="flex items-center gap-2">
-                           <User size={16} />
-                           Profil Akun Saya
-                        </span>
-                        {isProfile && (
-                           <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full">
-                              Aktif
-                           </span>
-                        )}
-                     </button>
-
-                     <button
-                        type="button"
-                        onClick={handleLogoutClick}
-                        className="flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold text-rose-600 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 transition-colors mt-1 cursor-pointer"
-                     >
-                        <span>Keluar dari Akun</span>
-                        <LogOut size={16} />
-                     </button>
-                  </motion.div>
-               )}
-            </AnimatePresence>
          </header>
 
          {/* Receipt / QRIS Scanner Modal */}

@@ -19,8 +19,6 @@ import {
    EyeOff,
    ArrowLeft,
    Calendar,
-   Sparkles,
-   ExternalLink,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -249,10 +247,6 @@ export default function ProfilePage() {
                                       })
                                     : "2026"}
                               </span>
-                           </span>
-                           <span className="flex items-center gap-1.5">
-                              <Sparkles size={13} className="text-amber-500" />
-                              <span>Sakuin Personal v1.0</span>
                            </span>
                         </div>
                      </div>

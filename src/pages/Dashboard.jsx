@@ -30,14 +30,7 @@ const Dashboard = () => {
    const [showMobileQuickAdd, setShowMobileQuickAdd] = useState(false);
    const [showMobileScanner, setShowMobileScanner] = useState(false);
 
-   // Auto-open history modal if redirected with ?history=true or via global event
    useEffect(() => {
-      const params = new URLSearchParams(location.search);
-      if (params.get("history") === "true") {
-         setShowHistoryModal(true);
-         navigate("/", { replace: true });
-      }
-
       const handleTxCreated = (e) => {
          const newTx = e.detail;
          if (newTx) {
@@ -45,18 +38,24 @@ const Dashboard = () => {
          }
       };
 
+      const handleHistoryUpdated = () => {
+         setHistoryUpdateCounter((prev) => prev + 1);
+      };
+
       const handleOpenHistory = () => {
          setShowHistoryModal(true);
       };
 
       window.addEventListener("sakuin:transaction-created", handleTxCreated);
+      window.addEventListener("sakuin:history-updated", handleHistoryUpdated);
       window.addEventListener("sakuin:open-history", handleOpenHistory);
 
       return () => {
          window.removeEventListener("sakuin:transaction-created", handleTxCreated);
+         window.removeEventListener("sakuin:history-updated", handleHistoryUpdated);
          window.removeEventListener("sakuin:open-history", handleOpenHistory);
       };
-   }, [location, navigate]);
+   }, []);
 
    const [actualSpending, setActualSpending] = useState({
       Makanan: 0,
