@@ -34,30 +34,30 @@ function App() {
                   style: {
                      background: "var(--color-surface)",
                      color: "var(--color-ink)",
-                     border: "2px solid var(--color-ink)",
-                     borderRadius: 0,
-                     fontFamily: "var(--font-mono)",
+                     border: "1px solid var(--color-border)",
+                     borderRadius: "1rem",
+                     fontFamily: "'Poppins', sans-serif",
                      fontSize: "0.85rem",
-                     textTransform: "uppercase",
-                     boxShadow: "4px 4px 0 var(--color-ink)",
-                     fontWeight: 600,
+                     boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05)",
+                     fontWeight: 500,
+                     padding: "0.75rem 1rem",
                   },
                   success: {
                      style: {
-                        border: "2px solid var(--color-positive)",
+                        border: "1px solid rgba(16, 185, 129, 0.3)",
                      },
                      iconTheme: {
-                        primary: "var(--color-positive)",
-                        secondary: "var(--color-surface)",
+                        primary: "#10B981",
+                        secondary: "#FFFFFF",
                      },
                   },
                   error: {
                      style: {
-                        border: "2px solid var(--color-negative)",
+                        border: "1px solid rgba(239, 68, 68, 0.3)",
                      },
                      iconTheme: {
-                        primary: "var(--color-negative)",
-                        secondary: "var(--color-surface)",
+                        primary: "#EF4444",
+                        secondary: "#FFFFFF",
                      },
                   },
                }}

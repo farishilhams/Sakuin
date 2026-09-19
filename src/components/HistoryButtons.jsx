@@ -82,8 +82,8 @@ const HistoryButtons = ({
                   <AlertTriangle size={20} className="stroke-[2.2]" />
                </div>
                <div>
-                  <h3 className="text-xs font-bold text-amber-700 dark:text-amber-300 uppercase tracking-wider">
-                     Batas Akhir Bulan
+                  <h3 className="text-xs font-bold text-amber-700 dark:text-amber-300">
+                     Peringatan Akhir Bulan
                   </h3>
                   <p className="text-xs text-[var(--color-ink)] mt-0.5">
                      Bulan berjalan segera berakhir. Segera arsipkan rekapan pengeluaran sebelum memasuki periode baru.

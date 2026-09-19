@@ -46,36 +46,36 @@ const WishlistPagination = ({
    const pageNumbers = getPageNumbers();
 
    return (
-      <div className="mt-8 flex justify-center font-mono text-xs select-none">
-         <div className="flex flex-wrap gap-1.5 items-center">
-            {/* First page */}
-            <button
-               onClick={() => handleClick(1)}
-               disabled={currentPage === 1}
-               className="w-9 h-9 flex items-center justify-center border-2 border-[var(--color-ink)] bg-[var(--color-surface)] text-[var(--color-ink)] shadow-[2px_2px_0_var(--color-ink)] hover:bg-[var(--color-bg)] disabled:opacity-30 disabled:pointer-events-none transition-all active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
-               aria-label="First page"
-               type="button"
-            >
-               <ChevronsLeft size={14} className="stroke-[2]" />
-            </button>
+      <div className="mt-8 flex justify-center items-center gap-1.5 flex-wrap text-xs select-none">
+         {/* First page */}
+         <button
+            onClick={() => handleClick(1)}
+            disabled={currentPage === 1}
+            className="w-8 h-8 rounded-xl flex items-center justify-center border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-ink)] hover:bg-[var(--color-bg)] disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
+            aria-label="Halaman Pertama"
+            type="button"
+         >
+            <ChevronsLeft size={14} className="stroke-[2.2]" />
+         </button>
 
-            {/* Prev page */}
-            <button
-               onClick={() => handleClick(currentPage - 1)}
-               disabled={currentPage === 1}
-               className="w-9 h-9 flex items-center justify-center border-2 border-[var(--color-ink)] bg-[var(--color-surface)] text-[var(--color-ink)] shadow-[2px_2px_0_var(--color-ink)] hover:bg-[var(--color-bg)] disabled:opacity-30 disabled:pointer-events-none transition-all active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
-               aria-label="Previous page"
-               type="button"
-            >
-               <ChevronLeft size={14} className="stroke-[2]" />
-            </button>
+         {/* Prev page */}
+         <button
+            onClick={() => handleClick(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="w-8 h-8 rounded-xl flex items-center justify-center border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-ink)] hover:bg-[var(--color-bg)] disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
+            aria-label="Halaman Sebelumnya"
+            type="button"
+         >
+            <ChevronLeft size={14} className="stroke-[2.2]" />
+         </button>
 
-            {/* Numbers */}
+         {/* Numbers */}
+         <div className="flex gap-1 overflow-x-auto px-1 max-w-[calc(100%-130px)] sm:max-w-full">
             {pageNumbers.map((item, index) =>
                item.type === "ellipsis" ? (
                   <span
                      key={`ellipsis-${index}`}
-                     className="w-9 h-9 flex items-center justify-center text-[var(--color-ink-muted)] font-bold"
+                     className="w-8 h-8 flex items-center justify-center text-[var(--color-ink-muted)] font-semibold"
                   >
                      ...
                   </span>
@@ -83,12 +83,12 @@ const WishlistPagination = ({
                   <button
                      key={`page-${item.number}`}
                      onClick={() => handleClick(item.number)}
-                     className={`w-9 h-9 flex items-center justify-center border-2 border-[var(--color-ink)] font-bold transition-all ${
+                     className={`w-8 h-8 rounded-xl flex items-center justify-center font-semibold text-xs transition-colors cursor-pointer ${
                         currentPage === item.number
-                           ? "bg-[var(--color-accent)] text-[var(--color-accent-ink)] shadow-[2px_2px_0_var(--color-ink)] -translate-x-0.5 -translate-y-0.5"
-                           : "bg-[var(--color-surface)] text-[var(--color-ink)] shadow-[2px_2px_0_var(--color-ink)] hover:bg-[var(--color-bg)] active:translate-x-0 active:translate-y-0 active:shadow-none"
+                           ? "bg-emerald-600 text-white shadow-xs"
+                           : "border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-ink)] hover:bg-[var(--color-bg)]"
                      }`}
-                     aria-label={`Page ${item.number}`}
+                     aria-label={`Halaman ${item.number}`}
                      aria-current={currentPage === item.number ? "page" : undefined}
                      type="button"
                   >
@@ -96,29 +96,29 @@ const WishlistPagination = ({
                   </button>
                )
             )}
-
-            {/* Next page */}
-            <button
-               onClick={() => handleClick(currentPage + 1)}
-               disabled={currentPage === totalPages}
-               className="w-9 h-9 flex items-center justify-center border-2 border-[var(--color-ink)] bg-[var(--color-surface)] text-[var(--color-ink)] shadow-[2px_2px_0_var(--color-ink)] hover:bg-[var(--color-bg)] disabled:opacity-30 disabled:pointer-events-none transition-all active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
-               aria-label="Next page"
-               type="button"
-            >
-               <ChevronRight size={14} className="stroke-[2]" />
-            </button>
-
-            {/* Last page */}
-            <button
-               onClick={() => handleClick(totalPages)}
-               disabled={currentPage === totalPages}
-               className="w-9 h-9 flex items-center justify-center border-2 border-[var(--color-ink)] bg-[var(--color-surface)] text-[var(--color-ink)] shadow-[2px_2px_0_var(--color-ink)] hover:bg-[var(--color-bg)] disabled:opacity-30 disabled:pointer-events-none transition-all active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
-               aria-label="Last page"
-               type="button"
-            >
-               <ChevronsRight size={14} className="stroke-[2]" />
-            </button>
          </div>
+
+         {/* Next page */}
+         <button
+            onClick={() => handleClick(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="w-8 h-8 rounded-xl flex items-center justify-center border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-ink)] hover:bg-[var(--color-bg)] disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
+            aria-label="Halaman Berikutnya"
+            type="button"
+         >
+            <ChevronRight size={14} className="stroke-[2.2]" />
+         </button>
+
+         {/* Last page */}
+         <button
+            onClick={() => handleClick(totalPages)}
+            disabled={currentPage === totalPages}
+            className="w-8 h-8 rounded-xl flex items-center justify-center border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-ink)] hover:bg-[var(--color-bg)] disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
+            aria-label="Halaman Terakhir"
+            type="button"
+         >
+            <ChevronsRight size={14} className="stroke-[2.2]" />
+         </button>
       </div>
    );
 };

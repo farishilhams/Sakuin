@@ -106,13 +106,13 @@ const DashboardWishlist = () => {
                <div className="flex flex-col sm:flex-row gap-6">
                   <WishlistStatsCard
                      number="1"
-                     title="TOTAL ITEM WISHLIST"
+                     title="Total Item Wishlist"
                      value={totalItem}
                   />
 
                   <WishlistStatsCard
                      number="2"
-                     title="TOTAL ESTIMASI HARGA"
+                     title="Total Estimasi Biaya"
                      value={totalPrice}
                      isPrice={true}
                   />
@@ -122,7 +122,7 @@ const DashboardWishlist = () => {
                <div className="flex items-center justify-between">
                   <AddWishlistButton onClick={handleAdd} />
                   {isLoadingDelete && (
-                     <LoadingIndicatorWishlist message="MENGHAPUS ITEM..." />
+                     <LoadingIndicatorWishlist message="Menghapus item..." />
                   )}
                </div>
 

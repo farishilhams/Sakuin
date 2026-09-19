@@ -40,7 +40,7 @@ const StatsCard = ({
                </span>
             </div>
 
-            <h3 className="text-xs font-semibold text-[var(--color-ink-muted)] uppercase tracking-wider mb-1.5">
+            <h3 className="text-xs font-medium text-[var(--color-ink-muted)] mb-1.5">
                {title}
             </h3>
 

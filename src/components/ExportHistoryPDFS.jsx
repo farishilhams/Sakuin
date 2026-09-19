@@ -127,12 +127,13 @@ const ExportHistoryPDFS = ({ history = [] }) => {
 
    return (
       <button
+         type="button"
          onClick={exportHistoryPDF}
          disabled={exportingPdf || history.length === 0}
-         className="font-mono uppercase text-xs tracking-wider font-bold bg-[var(--color-surface)] text-[var(--color-ink)] border-2 border-[var(--color-ink)] px-3 py-1.5 shadow-[2px_2px_0_var(--color-ink)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[4px_4px_0_var(--color-ink)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none disabled:opacity-40 disabled:pointer-events-none transition-all duration-100 flex items-center gap-1.5"
+         className="px-3.5 py-1.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] hover:bg-[var(--color-bg)] text-[var(--color-ink)] text-xs font-semibold shadow-2xs disabled:opacity-40 disabled:pointer-events-none transition-colors flex items-center gap-1.5 cursor-pointer"
       >
-         <FileDown size={14} className="stroke-[2.5]" />
-         <span>{exportingPdf ? "EXPORTING..." : "EXPORT PDF"}</span>
+         <FileDown size={14} className="stroke-[2.2] text-emerald-600 dark:text-emerald-400" />
+         <span>{exportingPdf ? "Mengekspor..." : "Unduh Rekap PDF"}</span>
       </button>
    );
 };

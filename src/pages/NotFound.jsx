@@ -1,35 +1,42 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, AlertOctagon } from "lucide-react";
+import { ArrowLeft, AlertCircle } from "lucide-react";
+import { motion } from "framer-motion";
 
 const NotFound = () => {
    return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--color-bg)] text-[var(--color-ink)]">
-         <div className="border-[3px] border-[var(--color-ink)] bg-[var(--color-surface)] shadow-[6px_6px_0_var(--color-ink)] p-8 sm:p-12 max-w-lg w-full text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 border-2 border-[var(--color-negative)] text-[var(--color-negative)] mb-4">
-               <AlertOctagon size={28} className="stroke-[2]" />
+         <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="border border-[var(--color-border)] bg-[var(--color-surface)] rounded-3xl shadow-xl p-8 sm:p-12 max-w-lg w-full text-center"
+         >
+            <div className="w-16 h-16 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto mb-5">
+               <AlertCircle size={32} className="stroke-[2.2]" />
             </div>
 
-            <h1 className="font-macro uppercase text-5xl sm:text-6xl tracking-tight leading-none mb-2">
+            <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-[var(--color-ink)] mb-2 font-mono tabular-nums">
                404
             </h1>
 
-            <p className="font-mono uppercase text-xs tracking-widest text-[var(--color-negative)] font-bold mb-4">
-               ERROR // HALAMAN TIDAK DITEMUKAN
+            <p className="text-sm font-semibold text-rose-600 dark:text-rose-400 mb-3">
+               Halaman Tidak Ditemukan
             </p>
 
-            <p className="font-body text-xs sm:text-sm text-[var(--color-ink-muted)] mb-8 border-y border-[var(--color-ink)]/15 py-3">
-               Alamat URL yang Anda tuju tidak terdaftar dalam routing sistem SAKUIN atau telah dipindahkan.
+            <p className="text-xs sm:text-sm text-[var(--color-ink-muted)] mb-8 max-w-sm mx-auto leading-relaxed">
+               Alamat URL yang Anda tuju tidak terdaftar dalam routing sistem Sakuin atau mungkin telah dipindahkan.
             </p>
 
-            <Link
-               to="/"
-               className="inline-flex items-center gap-2 font-mono uppercase text-xs tracking-wider font-bold bg-[var(--color-accent)] text-[var(--color-accent-ink)] border-2 border-[var(--color-ink)] px-6 py-3 shadow-[4px_4px_0_var(--color-ink)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-ink)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all"
-            >
-               <ArrowLeft size={14} className="stroke-[3]" />
-               <span>KEMBALI KE DASHBOARD</span>
-            </Link>
-         </div>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+               <Link
+                  to="/"
+                  className="inline-flex items-center gap-2 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl shadow-md shadow-emerald-600/20 transition-colors"
+               >
+                  <ArrowLeft size={16} className="stroke-[2.5]" />
+                  <span>Kembali ke Dashboard</span>
+               </Link>
+            </motion.div>
+         </motion.div>
       </div>
    );
 };

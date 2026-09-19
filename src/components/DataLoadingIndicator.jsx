@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 
-const DataLoadingIndicator = ({ isLoading, initialDelay = 1000 }) => {
+const DataLoadingIndicator = ({ isLoading, initialDelay = 800 }) => {
    const [showIndicator, setShowIndicator] = useState(false);
    const [elapsedTime, setElapsedTime] = useState(0);
-   const [message, setMessage] = useState("MEMUAT DATA...");
+   const [message, setMessage] = useState("Memuat data keuangan...");
 
    useEffect(() => {
       const timer = setTimeout(() => {
@@ -23,9 +25,9 @@ const DataLoadingIndicator = ({ isLoading, initialDelay = 1000 }) => {
             setElapsedTime((prev) => {
                const newTime = prev + 1;
                if (newTime > 10) {
-                  setMessage("MENGAMBIL DATA DARI SERVER, MOHON TUNGGU...");
-               } else if (newTime > 5) {
-                  setMessage("MENYINKRONKAN INFORMASI SAKUIN ANDA...");
+                  setMessage("Mengambil data dari server, mohon tunggu sebentar...");
+               } else if (newTime > 4) {
+                  setMessage("Menyinkronkan informasi saldo dan transaksi Sakuin...");
                }
                return newTime;
             });
@@ -41,7 +43,7 @@ const DataLoadingIndicator = ({ isLoading, initialDelay = 1000 }) => {
       if (!isLoading) {
          const hideTimer = setTimeout(() => {
             setShowIndicator(false);
-         }, 400);
+         }, 300);
 
          return () => clearTimeout(hideTimer);
       }
@@ -50,19 +52,23 @@ const DataLoadingIndicator = ({ isLoading, initialDelay = 1000 }) => {
    if (!showIndicator) return null;
 
    return (
-      <div className="mb-6 border-2 border-[var(--color-ink)] bg-[var(--color-surface)] p-4 shadow-[4px_4px_0_var(--color-ink)] animate-fadeIn font-mono">
+      <motion.div
+         initial={{ opacity: 0, y: -10 }}
+         animate={{ opacity: 1, y: 0 }}
+         className="mb-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 shadow-xs"
+      >
          <div className="flex items-center gap-3">
-            <span className="w-2.5 h-2.5 bg-[var(--color-accent)] animate-ping shrink-0" />
+            <Loader2 size={18} className="animate-spin text-emerald-500 shrink-0" />
             <div className="flex-1">
-               <h3 className="text-xs uppercase font-bold text-[var(--color-ink)] tracking-wider mb-1">
+               <h3 className="text-xs font-semibold text-[var(--color-ink)] mb-1.5">
                   {message}
                </h3>
-               <div className="w-full bg-[var(--color-bg)] border border-[var(--color-ink)] h-2 overflow-hidden">
-                  <div className="bg-[var(--color-accent)] h-full w-2/3 animate-pulse" />
+               <div className="w-full bg-[var(--color-bg)] rounded-full h-1.5 overflow-hidden">
+                  <div className="bg-emerald-500 h-full w-2/3 animate-pulse rounded-full" />
                </div>
             </div>
          </div>
-      </div>
+      </motion.div>
    );
 };
 

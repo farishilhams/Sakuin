@@ -1,6 +1,6 @@
 # DESIGN.md — Sakuin Modern Design System & Visual Tokens
 
-> Dokumen ini mencatat design tokens, komponen, dan konvensi visual yang **AKTIF DIGUNAKAN** di antarmuka frontend Sakuin. Seluruh tampilan dibangun dengan tema **Modern Financial Elegance** yang mengedepankan estetika bersih, keterbacaan data keuangan prima, tipografi Google Font **Poppins**, animasi halus **Framer Motion**, dan responsivitas nyata untuk perangkat Laptop, Tablet, Android, dan iPhone/iOS.
+> Dokumen ini mencatat design tokens, komponen, dan konvensi visual yang **AKTIF DIGUNAKAN** di antarmuka frontend Sakuin. Seluruh tampilan dibangun dengan mengacu pada **Dribbble Fintech Dashboards**, **Material Design 3 (M3)**, dan **21st.dev UI components** yang mengedepankan estetika bersih bebas AI Slop, tipografi Google Font **Poppins**, animasi halus **Framer Motion**, dan responsivitas nyata untuk perangkat Laptop, Tablet, Android, dan iPhone/iOS.
 
 ---
 

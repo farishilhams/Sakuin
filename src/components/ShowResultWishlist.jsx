@@ -14,10 +14,10 @@ export default function ShowResultWishlist({
    const totalPages = Math.max(1, Math.ceil(filteredCount / itemsPerPage));
 
    return (
-      <div className="mt-4 text-center font-mono text-xs text-[var(--color-ink-muted)] uppercase tracking-wide">
-         MENAMPILKAN {paginatedCount} DARI {filteredCount} ITEM
-         {hasActiveFilters && ` (DARI TOTAL ${totalCount} ITEM)`}
-         {" // "}HALAMAN {currentPage} DARI {totalPages}
+      <div className="mt-4 text-center text-xs text-[var(--color-ink-muted)]">
+         Menampilkan <span className="font-semibold text-[var(--color-ink)] tabular-nums">{paginatedCount}</span> dari <span className="font-semibold text-[var(--color-ink)] tabular-nums">{filteredCount}</span> item
+         {hasActiveFilters && ` (dari total ${totalCount} item)`}
+         {" • "}Halaman <span className="font-semibold text-[var(--color-ink)] tabular-nums">{currentPage}</span> dari <span className="font-semibold text-[var(--color-ink)] tabular-nums">{totalPages}</span>
       </div>
    );
 }
