@@ -65,17 +65,29 @@ const authLimiter = rateLimit({
    },
 });
 
-// Session configuration
+// Session configuration dengan fail-safe error handling
+const mongoURI =
+   process.env.MONGODB_URI ||
+   process.env.MONGO_URI ||
+   "mongodb://127.0.0.1:27017/sakuin";
+
+const sessionStore = MongoStore.create({
+   mongoUrl: mongoURI,
+   collectionName: "sessions",
+   ttl: 24 * 60 * 60, // 1 hari
+});
+
+// Tangkap error sessionStore agar tidak mematikan proses node (unhandled error event) jika MongoDB sedang offline
+sessionStore.on("error", (err) => {
+   console.warn(`[Session Store Warning]: Database session belum terhubung (${err.message}).`);
+});
+
 app.use(
    session({
       secret: process.env.SESSION_SECRET || process.env.JWT_SECRET || "sakuin_default_session_secret_farish",
       resave: false,
       saveUninitialized: false,
-      store: MongoStore.create({
-         mongoUrl: process.env.MONGODB_URI || process.env.MONGO_URI || "mongodb://127.0.0.1:27017/sakuin",
-         collectionName: "sessions",
-         ttl: 24 * 60 * 60, // 1 hari
-      }),
+      store: sessionStore,
       cookie: {
          secure: process.env.NODE_ENV === "production",
          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
@@ -99,9 +111,18 @@ app.use("/api/wishlist", wishlistRoutes);
 
 // Health check endpoint
 app.get("/api/health-check", (req, res) => {
+   const mongoose = require("mongoose");
+   const dbState = mongoose.connection.readyState;
+   const dbStatusMap = {
+      0: "Disconnected",
+      1: "Connected",
+      2: "Connecting",
+      3: "Disconnecting",
+   };
    res.status(200).json({
       status: "OK",
       service: "Sakuin API Server",
+      database: dbStatusMap[dbState] || "Unknown",
       timestamp: new Date().toISOString(),
    });
 });
@@ -117,6 +138,15 @@ app.use((err, req, res, next) => {
       message: err.message || "Terjadi kesalahan pada server",
       error: process.env.NODE_ENV === "development" ? err.stack : undefined,
    });
+});
+
+// Tangani unhandled rejection agar nodemon tidak crash saat MongoDB offline
+process.on("unhandledRejection", (reason) => {
+   if (reason && (reason.name === "MongoServerSelectionError" || reason.code === "ECONNREFUSED")) {
+      console.warn("[MongoDB Offline]: Menunggu database aktif (ECONNREFUSED). Server tetap berjalan.");
+   } else {
+      console.error("Unhandled Rejection:", reason);
+   }
 });
 
 const PORT = process.env.PORT || 5000;
