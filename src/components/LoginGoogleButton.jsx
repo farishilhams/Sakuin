@@ -1,0 +1,55 @@
+import React from "react";
+import { Loader2 } from "lucide-react";
+
+const LoginGoogleButton = ({ onClick, isLoading, isRegister = false }) => {
+   const handleClick = () => {
+      onClick(isRegister ? "register" : "login");
+   };
+
+   return (
+      <button
+         type="button"
+         onClick={handleClick}
+         disabled={isLoading}
+         className="w-full border border-[var(--color-border)] bg-[var(--color-surface)] hover:bg-[var(--color-bg)] text-[var(--color-ink)] py-2.5 px-4 rounded-xl text-xs font-semibold shadow-xs transition-colors flex items-center justify-center gap-2.5 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+      >
+         {isLoading ? (
+            <>
+               <Loader2 size={16} className="animate-spin text-emerald-500" />
+               <span>Menyambungkan ke Google...</span>
+            </>
+         ) : (
+            <>
+               <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  className="shrink-0"
+               >
+                  <path
+                     fill="#4285F4"
+                     d="M21.8,12.1c0-0.7-0.1-1.4-0.2-2.1H12v3.9h5.5c-0.2,1.2-0.9,2.3-2,3v2.5h3.2C20.2,17.5,21.8,15,21.8,12.1z"
+                  />
+                  <path
+                     fill="#34A853"
+                     d="M12,22c2.7,0,4.9-0.9,6.5-2.4l-3.2-2.5c-0.9,0.6-2,0.9-3.4,0.9c-2.6,0-4.7-1.7-5.5-4.1H3.1v2.6C4.8,19.7,8.2,22,12,22z"
+                  />
+                  <path
+                     fill="#FBBC05"
+                     d="M6.5,13.9c-0.2-0.6-0.3-1.2-0.3-1.9c0-0.7,0.1-1.3,0.3-1.9V7.6H3.1C2.4,9,2,10.5,2,12s0.4,3,1.1,4.4L6.5,13.9z"
+                  />
+                  <path
+                     fill="#EA4335"
+                     d="M12,5.8c1.4,0,2.7,0.5,3.8,1.5l2.8-2.8C16.9,2.9,14.7,2,12,2C8.2,2,4.8,4.3,3.1,7.6l3.4,2.6C7.3,7.5,9.5,5.8,12,5.8z"
+                  />
+               </svg>
+               <span>
+                  {isRegister ? "Daftar dengan Google" : "Masuk dengan Google"}
+               </span>
+            </>
+         )}
+      </button>
+   );
+};
+
+export default LoginGoogleButton;
