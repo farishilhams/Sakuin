@@ -278,9 +278,29 @@ const resetPassword = async (req, res) => {
    }
 };
 
+// POST /api/auth/logout
+const logout = async (req, res) => {
+   try {
+      if (req.logout) {
+         req.logout((err) => {
+            if (err) console.error("Passport logout error:", err);
+         });
+      }
+      if (req.session) {
+         req.session.destroy();
+      }
+      res.clearCookie("connect.sid");
+      return res.status(200).json({ message: "Berhasil keluar dari akun Sakuin." });
+   } catch (error) {
+      console.error("logout error:", error);
+      return res.status(200).json({ message: "Sesi telah dibersihkan." });
+   }
+};
+
 module.exports = {
    register,
    login,
+   logout,
    googleAuthCallback,
    getMe,
    updateProfile,

@@ -94,15 +94,7 @@ export default function TutorialPenggunaanAtLogin({ setShowTutorial }) {
                <div className="p-3.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-xs text-[var(--color-ink-muted)] flex items-center gap-2">
                   <CheckCircle2 size={16} className="text-emerald-500 shrink-0" />
                   <span>
-                     Repositori & Bantuan:{" "}
-                     <a
-                        href="https://github.com/farishilhams/Sakuin"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-emerald-600 dark:text-emerald-400 font-semibold hover:underline"
-                     >
-                        github.com/farishilhams/Sakuin
-                     </a>
+                     Tips Keuangan: Catat pengeluaran segera setelah transaksi agar saldo dompet selalu sinkron dan anggaran harian tetap terkendali.
                   </span>
                </div>
             </div>

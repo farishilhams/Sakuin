@@ -139,11 +139,18 @@ export const AuthProvider = ({ children }) => {
       }
    };
 
-   const logout = () => {
-      setUser(null);
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      delete api.defaults.headers.common["Authorization"];
+   const logout = async () => {
+      try {
+         await api.post("/auth/logout");
+      } catch (error) {
+         console.warn("Logout session clear warning:", error);
+      } finally {
+         setUser(null);
+         localStorage.removeItem("token");
+         localStorage.removeItem("user");
+         delete api.defaults.headers.common["Authorization"];
+         window.location.href = "/login";
+      }
    };
 
    const register = async (formData) => {

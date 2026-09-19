@@ -50,6 +50,11 @@ export default function ProfilePage() {
    const [savingPassword, setSavingPassword] = useState(false);
    const [passwordErrors, setPasswordErrors] = useState({});
 
+   const handleLogout = async () => {
+      toast.success("Berhasil keluar dari akun.");
+      await logout();
+   };
+
    useEffect(() => {
       if (user) {
          setProfileData({
@@ -256,7 +261,7 @@ export default function ProfilePage() {
                      <div className="shrink-0 pt-2 sm:pt-0">
                         <button
                            type="button"
-                           onClick={logout}
+                           onClick={handleLogout}
                            className="px-4 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
                         >
                            <LogOut size={14} />
@@ -519,21 +524,16 @@ export default function ProfilePage() {
                   </div>
                </div>
 
-               {/* Developer & Repository Card */}
+               {/* Financial Tips & Security Card */}
                <div className="p-4 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[var(--color-ink-muted)]">
                   <div className="flex items-center gap-2">
                      <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
-                     <span>Pengembang: <strong>Farish Ilham Syahrani</strong></span>
+                     <span>Tips Finansial: Pisahkan uang saku harian dan alokasikan tabungan di awal bulan.</span>
                   </div>
-                  <a
-                     href="https://github.com/farishilhams/Sakuin"
-                     target="_blank"
-                     rel="noopener noreferrer"
-                     className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold hover:underline"
-                  >
-                     <span>github.com/farishilhams/Sakuin</span>
-                     <ExternalLink size={13} />
-                  </a>
+                  <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-medium">
+                     <ShieldCheck size={14} />
+                     <span>Data Keuangan Terenkripsi</span>
+                  </div>
                </div>
             </main>
          </div>

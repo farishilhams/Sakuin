@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import DraggableFAB from "../components/DraggableFAB";
 import BottomNav from "../components/BottomNav";
 import TransactionModal from "../components/TransactionModal";
 import ReceiptScannerModal from "../components/ReceiptScannerModal";
+import { pageTransition } from "../utils/motionVariants";
 
 export default function AppShell() {
    const [showQuickAdd, setShowQuickAdd] = useState(false);
@@ -21,9 +23,20 @@ export default function AppShell() {
 
    return (
       <div className="min-h-screen relative flex flex-col">
-         {/* Render Active Route View */}
+         {/* Render Active Route View with Framer Motion Page Transition */}
          <div className="flex-1">
-            <Outlet />
+            <AnimatePresence mode="wait">
+               <motion.div
+                  key={location.pathname}
+                  variants={pageTransition}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  className="w-full"
+               >
+                  <Outlet />
+               </motion.div>
+            </AnimatePresence>
          </div>
 
          {/* Draggable AssistiveTouch Floating Action Button (iOS Style) */}

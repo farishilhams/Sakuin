@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { X, User, Mail, ShieldCheck, LogOut, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { AuthContext } from "../context/AuthContext";
 
-const ProfileModal = ({ isOpen, onClose, user, onLogout }) => {
+const ProfileModal = ({ isOpen, onClose, user: propUser, onLogout }) => {
+   const { user: authUser, logout } = useContext(AuthContext);
+   const user = propUser || authUser;
+   const handleLogout = onLogout || logout;
+
    if (!isOpen || !user) return null;
 
    const initials = user.name
@@ -107,7 +112,7 @@ const ProfileModal = ({ isOpen, onClose, user, onLogout }) => {
                         type="button"
                         onClick={() => {
                            onClose();
-                           onLogout();
+                           handleLogout();
                         }}
                         className="w-full py-2.5 px-4 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-semibold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
                      >
