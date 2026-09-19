@@ -9,11 +9,6 @@ import toast from "react-hot-toast";
 import WishlistStatsCard from "../components/WishlistStatsCard";
 import AddWishlistButton from "../components/AddWishlistButton";
 import LoadingIndicatorWishlist from "../components/LoadingIndicatorWishlist";
-import BottomNav from "../components/BottomNav";
-import TransactionModal from "../components/TransactionModal";
-import ReceiptScannerModal from "../components/ReceiptScannerModal";
-import ProfileModal from "../components/ProfileModal";
-
 const DashboardWishlist = () => {
    const { user, logout } = useContext(AuthContext);
    const navigate = useNavigate();
@@ -24,9 +19,6 @@ const DashboardWishlist = () => {
    const [totalItem, setTotalItem] = useState(0);
    const [isLoadingDelete, setIsLoadingDelete] = useState(false);
    const [isLoadingWishlists, setIsLoadingWishlists] = useState(true);
-   const [showMobileQuickAdd, setShowMobileQuickAdd] = useState(false);
-   const [showMobileScanner, setShowMobileScanner] = useState(false);
-   const [showProfileModal, setShowProfileModal] = useState(false);
 
    const fetchWishlist = useCallback(async () => {
       try {
@@ -148,44 +140,7 @@ const DashboardWishlist = () => {
             item={currentItem}
          />
 
-         {/* Mobile Bottom Navigation Bar (< 768px) */}
-         <BottomNav
-            onOpenQuickAdd={() => setShowMobileQuickAdd(true)}
-            onOpenHistory={() => navigate("/?history=true")}
-            onOpenProfile={() => setShowProfileModal(true)}
-         />
 
-         {/* Mobile Profile Modal */}
-         <ProfileModal
-            isOpen={showProfileModal}
-            onClose={() => setShowProfileModal(false)}
-            user={user}
-            onLogout={logout}
-         />
-
-         {/* Mobile Direct Quick Add Modal */}
-         {showMobileQuickAdd && (
-            <TransactionModal
-               onClose={() => setShowMobileQuickAdd(false)}
-               editData={null}
-               refreshTransactions={() => {
-                  setShowMobileQuickAdd(false);
-                  toast.success("Transaksi berhasil dicatat!");
-               }}
-            />
-         )}
-
-         {/* Mobile Direct Scanner Modal */}
-         {showMobileScanner && (
-            <ReceiptScannerModal
-               isOpen={showMobileScanner}
-               onClose={() => setShowMobileScanner(false)}
-               onTransactionSaved={() => {
-                  setShowMobileScanner(false);
-                  toast.success("Struk berhasil disimpan!");
-               }}
-            />
-         )}
 
          {/* Footer */}
          <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)] py-5 mt-12 mb-16 md:mb-0 transition-colors">

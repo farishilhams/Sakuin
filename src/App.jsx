@@ -15,6 +15,10 @@ import UnderMaintenancePage from "./pages/UnderMaintenance";
 import GoogleAuthSuccess from "./components/GoogleAuthSuccess";
 import { ThemeProvider } from "./context/ThemeContext";
 import { Toaster } from "react-hot-toast";
+import AppShell from "./layouts/AppShell";
+import ProfilePage from "./pages/ProfilePage";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
    const isUnderMaintenance =
@@ -66,35 +70,29 @@ function App() {
                {isUnderMaintenance ? (
                   <UnderMaintenancePage />
                ) : (
-                  <Routes>
-                     <Route
-                        path="/wishlist"
-                        element={
-                           <ProtectedRoute>
-                              <DashboardWishlist />
-                           </ProtectedRoute>
-                        }
-                     />
-                     <Route
-                        path="/"
-                        element={
-                           <ProtectedRoute>
-                              <Dashboard />
-                           </ProtectedRoute>
-                        }
-                     />
-                     <Route path="/login" element={<Login />} />
-                     <Route path="*" element={<NotFound />} />
-                     <Route
-                        path="/maintenance"
-                        element={<UnderMaintenancePage />}
-                     />
+                   <Routes>
+                      {/* Protected Routes wrapped in AppShell (DraggableFAB, BottomNav, Global Modals) */}
+                      <Route
+                         element={
+                            <ProtectedRoute>
+                               <AppShell />
+                            </ProtectedRoute>
+                         }
+                      >
+                         <Route path="/" element={<Dashboard />} />
+                         <Route path="/wishlist" element={<DashboardWishlist />} />
+                         <Route path="/profile" element={<ProfilePage />} />
+                         <Route path="/profil" element={<ProfilePage />} />
+                      </Route>
 
-                     <Route
-                        path="/auth/google/success"
-                        element={<GoogleAuthSuccess />}
-                     />
-                  </Routes>
+                      {/* Public Routes */}
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/forgot-password" element={<ForgotPassword />} />
+                      <Route path="/reset-password/:token" element={<ResetPassword />} />
+                      <Route path="/maintenance" element={<UnderMaintenancePage />} />
+                      <Route path="/auth/google/success" element={<GoogleAuthSuccess />} />
+                      <Route path="*" element={<NotFound />} />
+                   </Routes>
                )}
             </Router>
          </AuthProvider>

@@ -345,6 +345,19 @@ const Login = () => {
                            {validationErrors.password}
                         </p>
                      )}
+
+                     {/* Forgot Password Link */}
+                     {!isRegister && (
+                        <div className="flex justify-end mt-1.5">
+                           <button
+                              type="button"
+                              onClick={() => navigate("/forgot-password")}
+                              className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer transition-colors"
+                           >
+                              Lupa Kata Sandi?
+                           </button>
+                        </div>
+                     )}
                   </div>
 
                   {isRegister && (

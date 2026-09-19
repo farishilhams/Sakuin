@@ -11,12 +11,25 @@
 
 ## 🌟 Fitur Unggulan
 
+- 🎯 **Tombol Melayang Interaktif (AssistiveTouch iOS Draggable FAB)**:
+  - Persistent di tingkat root `AppShell` — posisi tidak pernah hilang atau reset saat berpindah halaman.
+  - *Magnetic snap-to-edge* otomatis merapat ke tepi kiri atau kanan layar secara natural dengan animasi pegas Framer Motion.
+  - Deteksi threshold cerdas: gestur tap di bawah 8px membuka modal transaksi kilat, sedangkan tarikan 8px atau lebih mengaktifkan mode drag.
+  - Memori posisi tersimpan aman di `localStorage` per perangkat.
 - ⚡ **Pencatatan Cepat Sat-Set (< 3 Detik, Maksimal 3 Tap)**:
-  - Custom Numpad besar bawaan (bebas hambatan keyboard layar HP) dengan chip nominal instan (`+10rb`, `+20rb`, `+50rb`, `+100rb`).
+  - Custom Numpad besar bawaan (bebas hambatan keyboard layar HP) dengan chip nominal instan `+10rb`, `+20rb`, `+50rb`, `+100rb`.
   - Grid kategori adaptif tepat di bawah numpad (Makanan & Minuman, Transportasi, Belanja, Tagihan, Hiburan, Kesehatan, Lainnya) yang otomatis menampilkan kategori terpopuler di depan.
   - **1-Tap Save**: Cukup tap 1 kategori, transaksi otomatis tersimpan seketika tanpa perlu mencari tombol submit terpisah.
   - **Interactive Toast & Instant Undo**: Notifikasi ringkas dengan tombol "Undo" (3-5 detik) untuk membatalkan transaksi yang keliru tanpa konfirmasi berbelit.
-  - Pemilihan dompet cerdas dengan ingatan riwayat dompet terakhir dan opsi catatan ringkas tersembunyi.
+  - 35+ Pilihan Dompet Terkategori (Bank Nasional, Bank Digital, E-Wallet, Investasi, Kas Fisik) dengan ingatan preferensi dompet terakhir.
+- 👤 **Halaman Profil Akun Universal (`/profile`)**:
+  - Tampilan seragam dan konsisten di seluruh ukuran layar (ponsel, tablet, desktop).
+  - Kelola nama pengguna, alamat email, avatar dengan pratinjau live, dan nomor telepon dengan lencana "Opsional".
+  - Ganti kata sandi langsung dari dalam akun dengan toggle mata interaktif (`Eye` & `EyeOff`) dan verifikasi kata sandi saat ini.
+- 🔐 **Alur Lupa & Reset Kata Sandi**:
+  - Pemulihan akun aman via token hash SHA-256 dengan batas kedaluwarsa 30 menit.
+  - Respons anti-enumerasi akun generic untuk mencegah sniffing data pengguna.
+  - Halaman `ForgotPassword` dan `ResetPassword` modern dengan validasi ganda.
 - 📸 **Pindai Struk & Bukti Transaksi Instan (OCR)**:
   - Ekstraksi otomatis nominal, tanggal, dan nama toko/merchant dari struk belanja atau tangkapan layar m-banking (QRIS).
 - 📊 **Dasbor Arus Kas Real-Time**:
@@ -27,8 +40,9 @@
   - **Tablet & iPad**: Layout *split-view* adaptif.
   - **Laptop & Desktop**: Tabel transaksi analitik lengkap dengan sorting, filtering, dan ekspor PDF.
 - 👁️ **Form Input Terstandarisasi & Toggle Password**:
-  - Placeholder aksi ramah pengguna: *"Masukkan nama lengkap"*, *"Masukkan alamat email"*, *"Masukkan kata sandi"*, *"Masukkan konfirmasi kata sandi"*, *"Masukkan nominal (Rp)"*.
-  - Ikon interaktif mata (`Eye` & `EyeOff`) untuk melihat atau menyembunyikan kata sandi.
+  - Placeholder aksi ramah pengguna: *"Masukkan nama lengkap"*, *"Masukkan alamat email"*, *"Masukkan kata sandi"*, *"Masukkan konfirmasi kata sandi"*, *"Masukkan nominal Rp"*.
+  - Ikon interaktif mata (`Eye` & `EyeOff`) di semua kolom kata sandi.
+  - Standarisasi wadah ikon outline `w-10 h-10 rounded-2xl` transparan modern tanpa lingkaran putih AI Slop.
 - 🔒 **Keamanan Berlapis**:
   - Proteksi HTTP Security Headers (`helmet`), Anti-NoSQL Injection (`express-mongo-sanitize`), Rate Limiter autentikasi, serta hash kata sandi `bcrypt`.
 
@@ -208,11 +222,12 @@ Sakuin/
 ├── routes/              # Express API route endpoints
 ├── public/              # Aset statis & PWA manifest
 ├── src/
-│   ├── components/      # Komponen UI: Header, BottomNav, Modals, Tables, Cards
+│   ├── components/      # Komponen UI: Header, BottomNav, DraggableFAB, Modals, Tables
 │   ├── context/         # AuthContext & ThemeContext
-│   ├── pages/           # Dashboard (Arus Kas), DashboardWishlist, Login
+│   ├── layouts/         # AppShell.jsx (Persistent FAB, BottomNav, Global Modals)
+│   ├── pages/           # Dashboard, DashboardWishlist, ProfilePage, Login, Forgot/Reset
 │   ├── utils/           # Axios instance api.js & OCR receiptParser.js
-│   ├── App.jsx          # Router & Providers
+│   ├── App.jsx          # Route Tree & Providers
 │   └── index.css        # Tailwind CSS v4 tokens, Poppins font, Clean Fintech
 ├── server.js            # Express server (Helmet, Rate Limit, Mongo Sanitize)
 ├── README.md            # Dokumentasi resmi Sakuin

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ThemeSwitcher from "./ThemeSwitcher";
 import ReceiptScannerModal from "./ReceiptScannerModal";
-import { Menu, X, LogOut, Wallet, Receipt, CreditCard } from "lucide-react";
+import { Menu, X, LogOut, Wallet, Receipt, CreditCard, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Header({ logout, onTransactionSaved }) {
@@ -13,6 +13,7 @@ export default function Header({ logout, onTransactionSaved }) {
 
    const isDashboard = location.pathname === "/";
    const isWishlist = location.pathname === "/wishlist";
+   const isProfile = location.pathname === "/profile" || location.pathname === "/profil";
 
    return (
       <>
@@ -96,6 +97,20 @@ export default function Header({ logout, onTransactionSaved }) {
                   <div className="border border-[var(--color-border)] rounded-xl p-0.5 bg-[var(--color-surface)]">
                      <ThemeSwitcher />
                   </div>
+
+                  {/* Profile Button */}
+                  <button
+                     onClick={() => navigate("/profile")}
+                     className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer border ${
+                        isProfile
+                           ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
+                           : "bg-[var(--color-surface)] text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] border-[var(--color-border)]"
+                     }`}
+                     title="Profil Pengguna"
+                  >
+                     <User size={14} className="stroke-[2.2]" />
+                     <span>Profil</span>
+                  </button>
 
                   {/* Logout Button */}
                   <button
@@ -185,6 +200,24 @@ export default function Header({ logout, onTransactionSaved }) {
                            <Receipt size={16} />
                            Pindai Bukti Struk & QRIS
                         </span>
+                     </button>
+
+                     <button
+                        onClick={() => {
+                           setIsMenuOpen(false);
+                           navigate("/profile");
+                        }}
+                        className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                           isProfile
+                              ? "bg-emerald-600 text-white shadow-xs"
+                              : "bg-[var(--color-surface)] text-[var(--color-ink)] border border-[var(--color-border)]"
+                        }`}
+                     >
+                        <span className="flex items-center gap-2">
+                           <User size={16} />
+                           Profil Akun Saya
+                        </span>
+                        {isProfile && <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full">Aktif</span>}
                      </button>
 
                      <button

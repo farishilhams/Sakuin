@@ -11,11 +11,6 @@ import Header from "../components/Header";
 import WelcomeMessage from "../components/WelcomeMessage";
 import toast from "react-hot-toast";
 import StatsCardKeuangan from "../components/StatsCardKeuangan";
-import QuickAddTransactionButton from "../components/QuickAddTransactionButton";
-import BottomNav from "../components/BottomNav";
-import TransactionModal from "../components/TransactionModal";
-import ReceiptScannerModal from "../components/ReceiptScannerModal";
-import ProfileModal from "../components/ProfileModal";
 
 const Dashboard = () => {
    const { user, logout } = useContext(AuthContext);
@@ -35,13 +30,32 @@ const Dashboard = () => {
    const [showMobileQuickAdd, setShowMobileQuickAdd] = useState(false);
    const [showMobileScanner, setShowMobileScanner] = useState(false);
 
-   // Auto-open history modal if redirected with ?history=true
+   // Auto-open history modal if redirected with ?history=true or via global event
    useEffect(() => {
       const params = new URLSearchParams(location.search);
       if (params.get("history") === "true") {
          setShowHistoryModal(true);
          navigate("/", { replace: true });
       }
+
+      const handleTxCreated = (e) => {
+         const newTx = e.detail;
+         if (newTx) {
+            setTransactions((prev) => [newTx, ...prev]);
+         }
+      };
+
+      const handleOpenHistory = () => {
+         setShowHistoryModal(true);
+      };
+
+      window.addEventListener("sakuin:transaction-created", handleTxCreated);
+      window.addEventListener("sakuin:open-history", handleOpenHistory);
+
+      return () => {
+         window.removeEventListener("sakuin:transaction-created", handleTxCreated);
+         window.removeEventListener("sakuin:open-history", handleOpenHistory);
+      };
    }, [location, navigate]);
 
    const [actualSpending, setActualSpending] = useState({
@@ -207,60 +221,7 @@ const Dashboard = () => {
             />
          )}
 
-         {/* Quick Add FAB & Speed Dial (Desktop & Tablet) */}
-         <QuickAddTransactionButton
-            refreshTransactions={setTransactions}
-            isScrolled={isScrolled}
-            transactions={transactions}
-         />
 
-         {/* Mobile Bottom Navigation Bar (< 768px) */}
-         <BottomNav
-            onOpenQuickAdd={() => setShowMobileQuickAdd(true)}
-            onOpenHistory={() => setShowHistoryModal(true)}
-            onOpenProfile={() => setShowProfileModal(true)}
-         />
-
-         {/* Mobile Profile Modal */}
-         <ProfileModal
-            isOpen={showProfileModal}
-            onClose={() => setShowProfileModal(false)}
-            user={user}
-            onLogout={logout}
-         />
-
-         {/* Mobile Direct Quick Add Modal */}
-         {showMobileQuickAdd && (
-            <TransactionModal
-               onClose={() => setShowMobileQuickAdd(false)}
-               editData={null}
-               existingTransactions={transactions}
-               onOpenScanner={() => {
-                  setShowMobileQuickAdd(false);
-                  setShowMobileScanner(true);
-               }}
-               refreshTransactions={(newTx) => {
-                  if (newTx && Array.isArray(newTx)) {
-                     setTransactions(newTx);
-                  } else if (newTx) {
-                     setTransactions((prev) => [newTx, ...prev]);
-                  }
-                  setShowMobileQuickAdd(false);
-               }}
-            />
-         )}
-
-         {/* Mobile Direct Scanner Modal */}
-         {showMobileScanner && (
-            <ReceiptScannerModal
-               isOpen={showMobileScanner}
-               onClose={() => setShowMobileScanner(false)}
-               onTransactionSaved={(newTx) => {
-                  if (newTx) setTransactions((prev) => [newTx, ...prev]);
-                  setShowMobileScanner(false);
-               }}
-            />
-         )}
 
          {/* Footer */}
          <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)] py-5 mt-12 mb-16 md:mb-0 transition-colors">

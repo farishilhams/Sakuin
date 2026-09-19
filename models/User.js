@@ -33,6 +33,19 @@ const UserSchema = new mongoose.Schema(
          enum: ["local", "google"],
          default: "local",
       },
+      phone: {
+         type: String,
+         default: "",
+         trim: true,
+      },
+      resetPasswordToken: {
+         type: String,
+         default: null,
+      },
+      resetPasswordExpires: {
+         type: Date,
+         default: null,
+      },
    },
    {
       timestamps: true,

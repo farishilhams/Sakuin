@@ -9,12 +9,21 @@ export default function BottomNav({ onOpenQuickAdd, onOpenHistory, onOpenProfile
 
    const isDashboard = location.pathname === "/";
    const isWishlist = location.pathname === "/wishlist";
+   const isProfile = location.pathname === "/profile" || location.pathname === "/profil";
 
    const handleHistoryClick = () => {
       if (onOpenHistory) {
          onOpenHistory();
       } else {
          navigate("/?history=true");
+      }
+   };
+
+   const handleProfileClick = () => {
+      if (onOpenProfile) {
+         onOpenProfile();
+      } else {
+         navigate("/profile");
       }
    };
 
@@ -101,12 +110,23 @@ export default function BottomNav({ onOpenQuickAdd, onOpenHistory, onOpenProfile
             {/* 5. Profil Akun */}
             <button
                type="button"
-               onClick={onOpenProfile}
-               className="flex flex-col items-center justify-center flex-1 py-1 text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] transition-all cursor-pointer"
+               onClick={handleProfileClick}
+               className={`flex flex-col items-center justify-center flex-1 py-1 transition-all cursor-pointer ${
+                  isProfile
+                     ? "text-emerald-600 dark:text-emerald-400 font-semibold"
+                     : "text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
+               }`}
                title="Profil Akun Pengguna"
             >
                <div className="relative">
                   <User size={20} className="stroke-[2.2]" />
+                  {isProfile && (
+                     <motion.div
+                        layoutId="bottom-nav-dot"
+                        className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500"
+                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                     />
+                  )}
                </div>
                <span className="text-[10px] mt-1 font-medium tracking-tight">Profil</span>
             </button>
