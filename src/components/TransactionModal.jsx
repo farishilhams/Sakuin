@@ -23,6 +23,13 @@ import {
    Search,
    Plus,
    ChevronRight,
+   TrendingUp,
+   Banknote,
+   Gift,
+   ArrowDownLeft,
+   Briefcase,
+   Star,
+   ArrowDownRight,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -43,6 +50,17 @@ const defaultCategories = [
    { name: "Lainnya", icon: MoreHorizontal, color: "text-slate-500 bg-slate-500/10 border-slate-500/20 hover:bg-slate-500/20" },
 ];
 
+// Kategori khusus untuk transaksi Pemasukan
+const incomeCategories = [
+   { name: "Gaji", icon: Briefcase, color: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20 hover:bg-emerald-500/20" },
+   { name: "Freelance", icon: Star, color: "text-indigo-500 bg-indigo-500/10 border-indigo-500/20 hover:bg-indigo-500/20" },
+   { name: "Bonus", icon: TrendingUp, color: "text-amber-500 bg-amber-500/10 border-amber-500/20 hover:bg-amber-500/20" },
+   { name: "Transfer Masuk", icon: ArrowDownLeft, color: "text-blue-500 bg-blue-500/10 border-blue-500/20 hover:bg-blue-500/20" },
+   { name: "Investasi", icon: Banknote, color: "text-purple-500 bg-purple-500/10 border-purple-500/20 hover:bg-purple-500/20" },
+   { name: "Hadiah", icon: Gift, color: "text-rose-500 bg-rose-500/10 border-rose-500/20 hover:bg-rose-500/20" },
+   { name: "Lainnya Pemasukan", icon: MoreHorizontal, color: "text-slate-500 bg-slate-500/10 border-slate-500/20 hover:bg-slate-500/20" },
+];
+
 const quickPrimaryWallets = ["Tunai", "BCA", "Mandiri", "GoPay", "ShopeePay", "DANA"];
 const quickAdditions = [10000, 20000, 50000, 100000];
 const customColorOptions = ["#10B981", "#2563EB", "#8B5CF6", "#F59E0B", "#EC4899", "#06B6D4"];
@@ -54,6 +72,9 @@ const TransactionModal = ({
    onOpenScanner,
    existingTransactions = [],
 }) => {
+   // State untuk tipe transaksi: "expense" | "income"
+   const [txType, setTxType] = useState("expense");
+
    // State for Quick 3-Tap Numpad Mode
    const [amount, setAmount] = useState(0);
    const [selectedWallet, setSelectedWallet] = useState(() => {
@@ -193,7 +214,7 @@ const TransactionModal = ({
          wallet: selectedWallet,
          notes: notes.trim(),
          date: new Date().toISOString().slice(0, 10),
-         type: "expense",
+         type: txType,
       };
 
       try {
@@ -219,8 +240,8 @@ const TransactionModal = ({
                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
                      <div className="truncate">
                         <p className="text-xs font-bold text-[var(--color-ink)] truncate">
-                           Rp {currentAmount.toLocaleString("id-ID")} — {finalCategory} tersimpan
-                        </p>
+                            Rp {currentAmount.toLocaleString("id-ID")} — {finalCategory} {txType === "income" ? "(Pemasukan)" : ""} tersimpan
+                         </p>
                         <p className="text-[10px] text-[var(--color-ink-muted)]">
                            Dompet: {selectedWallet}
                         </p>
@@ -323,6 +344,40 @@ const TransactionModal = ({
          >
             {/* Mobile Sheet Handle */}
             <div className="sm:hidden w-12 h-1.5 bg-[var(--color-border)] rounded-full mx-auto mt-2.5 mb-1 shrink-0" />
+
+            {/* Tab Switcher: Pengeluaran / Pemasukan (hanya di Quick Mode, bukan Edit Mode) */}
+            {!editData && (
+               <div className="px-5 pt-2 pb-0 shrink-0">
+                  <div className="flex bg-[var(--color-bg)] border border-[var(--color-border)] rounded-xl p-0.5 gap-0.5">
+                     <motion.button
+                        type="button"
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => setTxType("expense")}
+                        className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                           txType === "expense"
+                              ? "bg-rose-500 text-white shadow-xs"
+                              : "text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
+                        }`}
+                     >
+                        <ArrowDownRight size={14} className="stroke-[2.5]" />
+                        <span>Pengeluaran</span>
+                     </motion.button>
+                     <motion.button
+                        type="button"
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => setTxType("income")}
+                        className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                           txType === "income"
+                              ? "bg-emerald-500 text-white shadow-xs"
+                              : "text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
+                        }`}
+                     >
+                        <ArrowDownLeft size={14} className="stroke-[2.5]" />
+                        <span>Pemasukan</span>
+                     </motion.button>
+                  </div>
+               </div>
+            )}
 
             {/* Header */}
             <div className="px-5 py-3.5 border-b border-[var(--color-border)] flex items-center justify-between shrink-0">
@@ -517,12 +572,18 @@ const TransactionModal = ({
                /* ==================== QUICK NUMPAD 3-TAP MODE ==================== */
                <div className="p-4 sm:p-5 overflow-y-auto space-y-3.5">
                   {/* 1. Hero Nominal Display */}
-                  <div className="bg-[var(--color-bg)] border border-[var(--color-border)] rounded-2xl p-4 text-center relative overflow-hidden">
+                  <div className={`border rounded-2xl p-4 text-center relative overflow-hidden transition-colors ${
+                     txType === "income"
+                        ? "bg-emerald-950/30 dark:bg-emerald-950/50 border-emerald-500/20"
+                        : "bg-[var(--color-bg)] border-[var(--color-border)]"
+                  }`}>
                      <span className="text-[10px] font-semibold text-[var(--color-ink-muted)] uppercase tracking-wider block mb-0.5">
-                        Nominal Pengeluaran
+                        {txType === "income" ? "Nominal Pemasukan" : "Nominal Pengeluaran"}
                      </span>
                      <div className="flex items-center justify-center gap-1">
-                        <span className="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                        <span className={`text-xl sm:text-2xl font-bold ${
+                           txType === "income" ? "text-emerald-500" : "text-emerald-600 dark:text-emerald-400"
+                        }`}>
                            Rp
                         </span>
                         <span
@@ -604,22 +665,22 @@ const TransactionModal = ({
                      </motion.button>
                   </div>
 
-                  {/* 3. 1-Tap Category Grid (Adaptive Ordering) */}
+                  {/* 3. 1-Tap Category Grid (Adaptive Ordering / Income Categories) */}
                   <div>
                      <div className="flex items-center justify-between mb-1.5 px-0.5">
                         <span className="text-xs font-semibold text-[var(--color-ink)] flex items-center gap-1.5">
-                           <span>Pilih Kategori untuk Simpan</span>
+                           <span>{txType === "income" ? "Pilih Sumber Pemasukan" : "Pilih Kategori untuk Simpan"}</span>
                            <span className="text-[10px] text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.2 rounded font-bold">
                               1-Tap
                            </span>
                         </span>
                         <span className="text-[10px] text-[var(--color-ink-muted)]">
-                           Paling Sering Digunakan
+                           {txType === "income" ? "Tap untuk Catat" : "Paling Sering Digunakan"}
                         </span>
                      </div>
 
                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {sortedCategories.map((cat) => {
+                        {(txType === "income" ? incomeCategories : sortedCategories).map((cat) => {
                            const Icon = cat.icon;
                            return (
                               <motion.button

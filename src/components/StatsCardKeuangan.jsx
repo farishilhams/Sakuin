@@ -77,6 +77,7 @@ const StatsCardKeuangan = ({
    budgets,
    actualSpending,
    monthlyIncome,
+   totalIncomeRealtime = 0,
    isLoading = false,
 }) => {
    const totalBudget = (budgets || []).reduce((sum, item) => sum + (item.budget || 0), 0);
@@ -121,6 +122,14 @@ const StatsCardKeuangan = ({
             title="Pemasukan Bulanan"
             value={incomeAmount}
             isLoading={isLoading}
+            additionalInfo={
+               totalIncomeRealtime > 0
+                  ? {
+                       label: "+ Pemasukan Tercatat",
+                       value: totalIncomeRealtime,
+                    }
+                  : null
+            }
          />
       </div>
    );

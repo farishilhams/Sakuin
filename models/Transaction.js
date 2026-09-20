@@ -17,6 +17,7 @@ const TransactionSchema = new mongoose.Schema(
          type: String,
          enum: {
             values: [
+               // ─── Kategori Pengeluaran ───
                "Makanan",
                "Makanan & Minuman",
                "Transportasi",
@@ -27,6 +28,14 @@ const TransactionSchema = new mongoose.Schema(
                "Pendidikan",
                "Kebutuhan Pribadi",
                "Lainnya",
+               // ─── Kategori Pemasukan ───
+               "Gaji",
+               "Bonus",
+               "Freelance",
+               "Transfer Masuk",
+               "Investasi",
+               "Hadiah",
+               "Lainnya Pemasukan",
             ],
             message: "Kategori {VALUE} tidak didukung",
          },

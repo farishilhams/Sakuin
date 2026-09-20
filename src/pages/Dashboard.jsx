@@ -35,6 +35,14 @@ const Dashboard = () => {
          const newTx = e.detail;
          if (newTx) {
             setTransactions((prev) => [newTx, ...prev]);
+            // Jika transaksi income di bulan berjalan, tambahkan ke totalIncomeRealtime
+            if (newTx.type === "income") {
+               const txDate = new Date(newTx.date);
+               const now = new Date();
+               if (txDate.getMonth() === now.getMonth() && txDate.getFullYear() === now.getFullYear()) {
+                  setTotalIncomeRealtime((prev) => prev + (newTx.amount || 0));
+               }
+            }
          }
       };
 
@@ -65,6 +73,8 @@ const Dashboard = () => {
       Pendidikan: 0,
       "Kebutuhan Pribadi": 0,
    });
+   // Total pemasukan real-time dari transaksi Quick Add bertipe "income" bulan berjalan
+   const [totalIncomeRealtime, setTotalIncomeRealtime] = useState(0);
 
    useEffect(() => {
       const handleScroll = () => {
@@ -148,7 +158,7 @@ const Dashboard = () => {
          const currentMonth = now.getMonth(); // 0-11 (Jan-Dec)
          const currentYear = now.getFullYear();
 
-         // Filter transactions for current month only
+         // Filter hanya transaksi bulan berjalan
          const currentMonthTransactions = transactions.filter((tx) => {
             const txDate = new Date(tx.date);
             return (
@@ -157,16 +167,24 @@ const Dashboard = () => {
             );
          });
 
-         // Sum up amounts by category for current month only
-         currentMonthTransactions.forEach((tx) => {
-            if (spending[tx.category] !== undefined) {
-               spending[tx.category] += tx.amount || 0;
-            } else {
-               spending[tx.category] = (spending[tx.category] || 0) + (tx.amount || 0);
-            }
-         });
+         // Hitung total pengeluaran aktual per kategori (hanya tipe expense)
+         currentMonthTransactions
+            .filter((tx) => tx.type !== "income")
+            .forEach((tx) => {
+               if (spending[tx.category] !== undefined) {
+                  spending[tx.category] += tx.amount || 0;
+               } else {
+                  spending[tx.category] = (spending[tx.category] || 0) + (tx.amount || 0);
+               }
+            });
+
+         // Hitung total pemasukan real-time dari transaksi income bulan berjalan
+         const incomeTotal = currentMonthTransactions
+            .filter((tx) => tx.type === "income")
+            .reduce((sum, tx) => sum + (tx.amount || 0), 0);
 
          setActualSpending(spending);
+         setTotalIncomeRealtime(incomeTotal);
       } else {
          setActualSpending({
             Makanan: 0,
@@ -207,6 +225,7 @@ const Dashboard = () => {
                   budgets={budgets}
                   actualSpending={actualSpending}
                   monthlyIncome={monthlyIncome}
+                  totalIncomeRealtime={totalIncomeRealtime}
                   isLoading={isLoading}
                />
 
