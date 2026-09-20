@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const path = require("path");
 const fs = require("fs");
+const { uploadBufferToStorage } = require("../config/cloudinary");
 
 const register = async (req, res) => {
    try {
@@ -135,7 +136,7 @@ const getMe = async (req, res) => {
 // POST /api/auth/upload-avatar
 const uploadAvatar = async (req, res) => {
    try {
-      if (!req.file) {
+      if (!req.file || !req.file.buffer) {
          return res.status(400).json({
             message: "Silakan pilih berkas foto untuk diunggah",
          });
@@ -146,20 +147,12 @@ const uploadAvatar = async (req, res) => {
          return res.status(404).json({ message: "Pengguna tidak ditemukan" });
       }
 
-      // Format path file lokal yang dapat diakses secara publik
-      const avatarUrl = `/uploads/avatars/${req.file.filename}`;
-
-      // Hapus avatar lama jika sebelumnya merupakan file lokal di uploads/avatars/
-      if (user.avatar && user.avatar.startsWith("/uploads/avatars/")) {
-         const oldAvatarPath = path.join(__dirname, "..", user.avatar);
-         if (fs.existsSync(oldAvatarPath)) {
-            try {
-               fs.unlinkSync(oldAvatarPath);
-            } catch (err) {
-               console.warn("[Avatar Cleanup Warning]: Gagal menghapus avatar lama:", err.message);
-            }
-         }
-      }
+      // Upload buffer ke Cloudinary atau fallback Data URI base64 (serverless-friendly)
+      const avatarUrl = await uploadBufferToStorage(
+         req.file.buffer,
+         req.file.mimetype,
+         "sakuin_avatars"
+      );
 
       user.avatar = avatarUrl;
       await user.save();
@@ -197,19 +190,13 @@ const updateProfile = async (req, res) => {
       if (name) user.name = name.trim();
       if (phone !== undefined) user.phone = phone.trim();
 
-      // Jika ada file yang diunggah via multipart di endpoint ini
-      if (req.file) {
-         const avatarUrl = `/uploads/avatars/${req.file.filename}`;
-         if (user.avatar && user.avatar.startsWith("/uploads/avatars/")) {
-            const oldAvatarPath = path.join(__dirname, "..", user.avatar);
-            if (fs.existsSync(oldAvatarPath)) {
-               try {
-                  fs.unlinkSync(oldAvatarPath);
-               } catch (err) {
-                  console.warn("[Avatar Cleanup Warning]:", err.message);
-               }
-            }
-         }
+      // Jika ada berkas foto yang diunggah via multipart di endpoint ini
+      if (req.file && req.file.buffer) {
+         const avatarUrl = await uploadBufferToStorage(
+            req.file.buffer,
+            req.file.mimetype,
+            "sakuin_avatars"
+         );
          user.avatar = avatarUrl;
       } else if (avatar !== undefined) {
          user.avatar = avatar;

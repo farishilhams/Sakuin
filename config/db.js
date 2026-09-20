@@ -2,10 +2,18 @@ const mongoose = require("mongoose");
 
 /**
  * Koneksi Database MongoDB (Mongoose) untuk Platform Sakuin
- * Mendukung MongoDB Atlas (Cloud) maupun MongoDB Local (Laragon/Community Server)
+ * Menggunakan pola caching koneksi yang aman untuk Vercel Serverless Functions
+ * maupun server konvensional (Express / nodemon).
  * Maintainer: Farish Ilham Syahrani (https://github.com/farishilhams)
  */
+let cachedConnection = null;
+
 const connectDB = async () => {
+   // Jika koneksi sudah aktif (readyState 1 = connected, 2 = connecting), gunakan kembali
+   if (cachedConnection && mongoose.connection.readyState >= 1) {
+      return cachedConnection;
+   }
+
    const mongoURI =
       process.env.MONGODB_URI ||
       process.env.MONGO_URI ||
@@ -17,19 +25,17 @@ const connectDB = async () => {
          autoIndex: true,
       });
 
+      cachedConnection = conn;
       console.log(`[MongoDB Connected]: ${conn.connection.host} (${conn.connection.name})`);
 
-      // Pasang event listener untuk memonitor koneksi secara real-time
+      // Event listener status koneksi
       mongoose.connection.on("error", (err) => {
          console.error(`[MongoDB Error]: ${err.message}`);
       });
 
       mongoose.connection.on("disconnected", () => {
-         console.warn("[MongoDB Disconnected]: Koneksi terputus. Mencoba menghubungkan kembali...");
-      });
-
-      mongoose.connection.on("reconnected", () => {
-         console.log("[MongoDB Reconnected]: Koneksi database berhasil dipulihkan.");
+         console.warn("[MongoDB Disconnected]: Koneksi terputus.");
+         cachedConnection = null;
       });
 
       return conn;
@@ -37,22 +43,16 @@ const connectDB = async () => {
       console.error("===================================================================");
       console.error(`[MongoDB Connection Error]: ${error.message}`);
       console.error("-------------------------------------------------------------------");
-      console.error("PANDUAN PENYEBAB & SOLUSI KONEKSI DATABASE:");
-      console.error("1. JIKA MENGGUNAKAN MONGODB ATLAS:");
-      console.error("   - Pastikan MONGODB_URI di berkas .env terisi dengan format valid:");
-      console.error("     mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/sakuin?retryWrites=true&w=majority");
-      console.error("   - Buka Network Access di MongoDB Atlas -> tambahkan IP Address 0.0.0.0/0 (Allow from Anywhere).");
-      console.error("   - Pastikan username & password Database User sudah benar (bukan password akun login Atlas).");
-      console.error("2. JIKA MENGGUNAKAN MONGODB LOKAL:");
-      console.error("   - Pastikan service mongod sudah berjalan di port 27017.");
-      console.error("   - Gunakan URI: mongodb://127.0.0.1:27017/sakuin");
+      console.error("PANDUAN KONEKSI DATABASE:");
+      console.error("1. MONGODB ATLAS:");
+      console.error("   - Pastikan MONGODB_URI diatur di Vercel Dashboard / .env.");
+      console.error("   - Pastikan IP 0.0.0.0/0 sudah terdaftar di Network Access Atlas.");
+      console.error("2. MONGODB LOKAL:");
+      console.error("   - Pastikan mongod berjalan pada port 27017.");
       console.error("===================================================================");
-      
-      // Jika di development, log error tanpa mematikan proses node secara mendadak
-      // agar developer tetap dapat melihat log dan memperbaiki .env
-      if (process.env.NODE_ENV === "production") {
-         process.exit(1);
-      }
+
+      // Jangan mematikan proses via exit(1) agar Vercel Serverless Function tidak crash seketika
+      throw error;
    }
 };
 

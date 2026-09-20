@@ -1,25 +1,12 @@
 const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
 
-// Pastikan folder uploads/avatars/ tersedia di sistem
-const uploadDir = path.join(__dirname, "../uploads/avatars");
-if (!fs.existsSync(uploadDir)) {
-   fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// Konfigurasi disk storage untuk multer
-const storage = multer.diskStorage({
-   destination: (req, file, cb) => {
-      cb(null, uploadDir);
-   },
-   filename: (req, file, cb) => {
-      const userId = req.user?.userId || "user";
-      const sanitizedExt = path.extname(file.originalname).toLowerCase();
-      const uniqueName = `avatar-${userId}-${Date.now()}${sanitizedExt}`;
-      cb(null, uniqueName);
-   },
-});
+/**
+ * Serverless-compatible Multer Configuration
+ * Menggunakan memoryStorage agar tidak menulis file fisik ke disk ephemeral Vercel.
+ * Buffer berkas disimpan di RAM dan divalidasi langsung berdasarkan magic bytes.
+ * Maintainer: Farish Ilham Syahrani (https://github.com/farishilhams)
+ */
+const storage = multer.memoryStorage();
 
 // Validasi MIME type awal
 const fileFilter = (req, file, cb) => {
@@ -53,15 +40,14 @@ const upload = multer({
 });
 
 /**
- * Validasi Magic Bytes untuk memastikan file benar-benar gambar valid
- * (bukan file berbahaya yang diganti ekstensinya)
+ * Validasi Magic Bytes secara langsung dari buffer in-memory
+ * Memastikan keaslian gambar tanpa menyentuh disk I/O
+ * @param {Buffer} buffer - Buffer file dari req.file.buffer
+ * @returns {boolean} - true jika byte awal valid sesuai format gambar
  */
-const validateMagicBytes = (filePath) => {
+const validateMagicBytes = (buffer) => {
    try {
-      const buffer = Buffer.alloc(12);
-      const fd = fs.openSync(filePath, "r");
-      fs.readSync(fd, buffer, 0, 12, 0);
-      fs.closeSync(fd);
+      if (!buffer || buffer.length < 12) return false;
 
       // Check JPEG: FF D8 FF
       if (buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) {
@@ -114,7 +100,7 @@ const validateMagicBytes = (filePath) => {
 };
 
 /**
- * Express middleware wrapper untuk penanganan error multer dan validasi magic bytes
+ * Express middleware wrapper untuk penanganan upload multipart berbasis memoryStorage
  */
 const handleAvatarUpload = (req, res, next) => {
    const uploadSingle = upload.single("avatar");
@@ -135,20 +121,13 @@ const handleAvatarUpload = (req, res, next) => {
          });
       }
 
-      // Jika ada file yang diunggah, lakukan verifikasi magic bytes
+      // Jika ada file yang diunggah, lakukan verifikasi magic bytes pada buffer
       if (req.file) {
-         const isValid = validateMagicBytes(req.file.path);
+         const isValid = validateMagicBytes(req.file.buffer);
          if (!isValid) {
-            // Hapus file palsu dari disk
-            try {
-               fs.unlinkSync(req.file.path);
-            } catch (unlinkErr) {
-               console.error("Gagal menghapus file invalid:", unlinkErr);
-            }
-
             return res.status(400).json({
                message:
-                  "Format berkas tidak valid. Berkas bukan merupakan gambar asli (JPEG, PNG, WebP, atau GIF).",
+                  "Format berkas tidak valid. Berkas bukan merupakan gambar asli JPEG, PNG, WebP, atau GIF.",
             });
          }
       }

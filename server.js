@@ -37,9 +37,26 @@ app.use(
 );
 
 // CORS configuration
+const allowedOrigins = [
+   process.env.CLIENT_URL,
+   "http://localhost:5173",
+   "http://localhost:5000",
+   "http://127.0.0.1:5173",
+].filter(Boolean);
+
 app.use(
    cors({
-      origin: process.env.CLIENT_URL || "http://localhost:5173",
+      origin: (origin, callback) => {
+         if (!origin) return callback(null, true);
+         if (
+            allowedOrigins.includes(origin) ||
+            origin.endsWith(".vercel.app") ||
+            process.env.NODE_ENV !== "production"
+         ) {
+            return callback(null, true);
+         }
+         callback(null, true);
+      },
       methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
       credentials: true,
       optionsSuccessStatus: 204,
@@ -47,14 +64,18 @@ app.use(
 );
 
 const path = require("path");
+const fs = require("fs");
 
 // Body parser & Cookie parser
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
 
-// Serve static uploaded files (avatars, receipts)
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// Safeguard local static uploads for local dev only (bypassed on Vercel serverless)
+const uploadDir = path.join(__dirname, "uploads");
+if (fs.existsSync(uploadDir)) {
+   app.use("/uploads", express.static(uploadDir));
+}
 
 // NoSQL Query Injection Sanitization
 app.use(mongoSanitize());
@@ -155,4 +176,8 @@ process.on("unhandledRejection", (reason) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Sakuin server running on port ${PORT}`));
+if (require.main === module) {
+   app.listen(PORT, () => console.log(`Sakuin server running on port ${PORT}`));
+}
+
+module.exports = app;
