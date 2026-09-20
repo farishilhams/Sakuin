@@ -1,9 +1,10 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import api from "../utils/api";
 import toast from "react-hot-toast";
 import Header from "../components/Header";
+import { getAvatarUrl } from "../utils/avatarHelper";
 import {
    User,
    Mail,
@@ -19,12 +20,17 @@ import {
    EyeOff,
    ArrowLeft,
    Calendar,
+   UploadCloud,
+   Trash2,
+   Image as ImageIcon,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function ProfilePage() {
    const { user, logout, updateUser } = useContext(AuthContext);
    const navigate = useNavigate();
+
+   const fileInputRef = useRef(null);
 
    // Profile form states
    const [profileData, setProfileData] = useState({
@@ -33,6 +39,9 @@ export default function ProfilePage() {
       phone: "",
       avatar: "",
    });
+   const [avatarFile, setAvatarFile] = useState(null);
+   const [avatarPreview, setAvatarPreview] = useState("");
+   const [uploadingAvatar, setUploadingAvatar] = useState(false);
    const [savingProfile, setSavingProfile] = useState(false);
    const [profileErrors, setProfileErrors] = useState({});
 
@@ -73,6 +82,103 @@ export default function ProfilePage() {
            .toUpperCase()
       : "U";
 
+   // Handler saat file foto dipilih
+   const handleFileChange = (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      // Validasi ukuran: maksimal 5MB
+      if (file.size > 5 * 1024 * 1024) {
+         toast.error("Ukuran berkas terlalu besar. Maksimal 5MB.");
+         return;
+      }
+
+      // Validasi tipe file gambar
+      if (!file.type.startsWith("image/")) {
+         toast.error("Format berkas harus berupa gambar (JPG, PNG, WebP, GIF).");
+         return;
+      }
+
+      setAvatarFile(file);
+
+      // Instant preview lokal dengan createObjectURL
+      const objectUrl = URL.createObjectURL(file);
+      setAvatarPreview(objectUrl);
+      toast.success("Foto profil dipilih. Klik 'Unggah Sekarang' atau simpan form untuk memperbarui.");
+   };
+
+   // Unggah langsung avatar terpisah
+   const handleDirectUploadAvatar = async () => {
+      if (!avatarFile) {
+         fileInputRef.current?.click();
+         return;
+      }
+
+      const formData = new FormData();
+      formData.append("avatar", avatarFile);
+
+      setUploadingAvatar(true);
+      const toastId = toast.loading("Mengunggah foto profil...");
+
+      try {
+         const res = await api.post("/auth/upload-avatar", formData, {
+            headers: {
+               "Content-Type": "multipart/form-data",
+            },
+         });
+
+         const newAvatarUrl = res.data.avatarUrl;
+         setProfileData((prev) => ({ ...prev, avatar: newAvatarUrl }));
+         setAvatarFile(null);
+         if (avatarPreview) {
+            URL.revokeObjectURL(avatarPreview);
+            setAvatarPreview("");
+         }
+
+         if (updateUser) {
+            updateUser(res.data.user);
+         }
+
+         toast.success("Foto profil berhasil diperbarui!", { id: toastId });
+      } catch (err) {
+         console.error("Upload avatar error:", err);
+         toast.error(err.response?.data?.message || "Gagal mengunggah foto profil", { id: toastId });
+      } finally {
+         setUploadingAvatar(false);
+      }
+   };
+
+   // Hapus foto profil
+   const handleRemoveAvatar = async () => {
+      setSavingProfile(true);
+      try {
+         const res = await api.put("/auth/profile", {
+            name: profileData.name.trim(),
+            email: profileData.email.trim(),
+            phone: profileData.phone.trim(),
+            avatar: "",
+         });
+
+         setProfileData((prev) => ({ ...prev, avatar: "" }));
+         setAvatarFile(null);
+         if (avatarPreview) {
+            URL.revokeObjectURL(avatarPreview);
+            setAvatarPreview("");
+         }
+
+         if (updateUser) {
+            updateUser(res.data.user);
+         }
+
+         toast.success("Foto profil berhasil dihapus.");
+      } catch (err) {
+         console.error("Hapus avatar error:", err);
+         toast.error("Gagal menghapus foto profil");
+      } finally {
+         setSavingProfile(false);
+      }
+   };
+
    // Handle Edit Profile Submit
    const handleProfileSubmit = async (e) => {
       e.preventDefault();
@@ -94,24 +200,48 @@ export default function ProfilePage() {
       setProfileErrors({});
 
       try {
-         const res = await api.put("/auth/profile", {
-            name: profileData.name.trim(),
-            email: profileData.email.trim(),
-            phone: profileData.phone.trim(),
-            avatar: profileData.avatar.trim(),
-         });
+         let res;
+
+         // Jika user melampirkan berkas foto baru, kirim via multipart/form-data FormData
+         if (avatarFile) {
+            const formData = new FormData();
+            formData.append("name", profileData.name.trim());
+            formData.append("email", profileData.email.trim());
+            formData.append("phone", profileData.phone.trim());
+            formData.append("avatar", avatarFile);
+
+            res = await api.put("/auth/profile", formData, {
+               headers: {
+                  "Content-Type": "multipart/form-data",
+               },
+            });
+
+            setAvatarFile(null);
+            if (avatarPreview) {
+               URL.revokeObjectURL(avatarPreview);
+               setAvatarPreview("");
+            }
+         } else {
+            // Pengiriman data teks biasa jika tidak ada file baru
+            res = await api.put("/auth/profile", {
+               name: profileData.name.trim(),
+               email: profileData.email.trim(),
+               phone: profileData.phone.trim(),
+               avatar: profileData.avatar.trim(),
+            });
+         }
 
          if (updateUser) {
             updateUser(res.data.user);
          } else {
-            // Update AuthContext user directly
-            const stored = localStorage.getItem("sakuin_user");
+            const stored = localStorage.getItem("user");
             if (stored) {
                const parsed = JSON.parse(stored);
-               localStorage.setItem("sakuin_user", JSON.stringify({ ...parsed, ...res.data.user }));
+               localStorage.setItem("user", JSON.stringify({ ...parsed, ...res.data.user }));
             }
          }
 
+         setProfileData((prev) => ({ ...prev, avatar: res.data.user?.avatar || "" }));
          toast.success("Profil akun berhasil diperbarui!");
       } catch (err) {
          console.error("Update profile error:", err);
@@ -173,8 +303,17 @@ export default function ProfilePage() {
    };
 
    return (
-      <div className="min-h-screen bg-[var(--color-bg)] flex flex-col justify-between transition-colors">
+      <div className="min-h-screen bg-transparent flex flex-col justify-between transition-colors">
          <div>
+            {/* Hidden native file input for profile photo upload */}
+            <input
+               ref={fileInputRef}
+               type="file"
+               accept="image/jpeg,image/png,image/webp,image/gif,image/jpg"
+               onChange={handleFileChange}
+               className="hidden"
+            />
+
             {/* Header Navbar */}
             <Header onOpenHistory={() => navigate("/?history=true")} />
 
@@ -200,11 +339,11 @@ export default function ProfilePage() {
                {/* Profile Hero Card */}
                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl p-6 sm:p-8 shadow-xs relative overflow-hidden">
                   <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
-                     {/* Avatar container */}
+                     {/* Avatar container with instant camera trigger */}
                      <div className="relative group shrink-0">
-                        {profileData.avatar ? (
+                        {avatarPreview || profileData.avatar ? (
                            <img
-                              src={profileData.avatar}
+                              src={getAvatarUrl(avatarPreview || profileData.avatar)}
                               alt={profileData.name}
                               className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl object-cover border-2 border-emerald-500/30 shadow-md"
                               onError={(e) => {
@@ -217,6 +356,22 @@ export default function ProfilePage() {
                               {initials}
                            </div>
                         )}
+
+                        {/* Quick Camera Trigger Button */}
+                        <button
+                           type="button"
+                           onClick={() => fileInputRef.current?.click()}
+                           disabled={uploadingAvatar}
+                           className="absolute -bottom-1 -right-1 w-8 h-8 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-md flex items-center justify-center border-2 border-[var(--color-surface)] cursor-pointer transition-all hover:scale-105"
+                           title="Ubah Foto Profil"
+                           aria-label="Pilih foto profil baru"
+                        >
+                           {uploadingAvatar ? (
+                              <Loader2 size={14} className="animate-spin" />
+                           ) : (
+                              <Camera size={14} />
+                           )}
+                        </button>
                      </div>
 
                      {/* Info */}
@@ -342,22 +497,96 @@ export default function ProfilePage() {
                            />
                         </div>
 
-                        <div>
-                           <div className="flex items-center justify-between mb-1.5">
-                              <label className="text-xs font-semibold text-[var(--color-ink)]">
-                                 URL Foto Profil
+                        {/* Unggah Foto Profil (Multipart File Upload & Preview) */}
+                        <div className="pt-1">
+                           <div className="flex items-center justify-between mb-2">
+                              <label className="text-xs font-semibold text-[var(--color-ink)] flex items-center gap-1.5">
+                                 <ImageIcon size={14} className="text-emerald-500" />
+                                 <span>Foto Profil Pengguna</span>
                               </label>
                               <span className="text-[10px] font-semibold text-[var(--color-ink-muted)] bg-[var(--color-bg)] px-2 py-0.5 rounded-md border border-[var(--color-border)]">
-                                 Opsional
+                                 Maks 5MB
                               </span>
                            </div>
-                           <input
-                              type="url"
-                              value={profileData.avatar}
-                              onChange={(e) => setProfileData({ ...profileData, avatar: e.target.value })}
-                              placeholder="https://... tautan foto avatar"
-                              className="w-full border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-ink)] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
-                           />
+
+                           <div className="border border-[var(--color-border)] rounded-2xl p-4 bg-[var(--color-bg)] transition-all">
+                              <div className="flex flex-col sm:flex-row items-center gap-4">
+                                 {/* Mini Thumbnail Preview */}
+                                 <div className="relative shrink-0">
+                                    {avatarPreview || profileData.avatar ? (
+                                       <img
+                                          src={getAvatarUrl(avatarPreview || profileData.avatar)}
+                                          alt="Preview Avatar"
+                                          className="w-14 h-14 rounded-2xl object-cover border border-emerald-500/30 shadow-xs"
+                                       />
+                                    ) : (
+                                       <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-bold text-lg shadow-xs">
+                                          {initials}
+                                       </div>
+                                    )}
+                                    {uploadingAvatar && (
+                                       <div className="absolute inset-0 bg-black/40 rounded-2xl flex items-center justify-center text-white">
+                                          <Loader2 size={18} className="animate-spin" />
+                                       </div>
+                                    )}
+                                 </div>
+
+                                 {/* Action Buttons & File Status */}
+                                 <div className="flex-1 text-center sm:text-left space-y-2">
+                                    <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                                       <button
+                                          type="button"
+                                          onClick={() => fileInputRef.current?.click()}
+                                          disabled={uploadingAvatar}
+                                          className="px-3.5 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+                                       >
+                                          <UploadCloud size={14} />
+                                          <span>{avatarFile ? "Ganti Berkas" : "Pilih Berkas Foto"}</span>
+                                       </button>
+
+                                       {avatarFile && (
+                                          <button
+                                             type="button"
+                                             onClick={handleDirectUploadAvatar}
+                                             disabled={uploadingAvatar}
+                                             className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs disabled:opacity-50"
+                                          >
+                                             {uploadingAvatar ? (
+                                                <>
+                                                   <Loader2 size={13} className="animate-spin" />
+                                                   <span>Mengunggah...</span>
+                                                </>
+                                             ) : (
+                                                <>
+                                                   <Check size={13} />
+                                                   <span>Unggah Sekarang</span>
+                                                </>
+                                             )}
+                                          </button>
+                                       )}
+
+                                       {(profileData.avatar || avatarFile) && (
+                                          <button
+                                             type="button"
+                                             onClick={handleRemoveAvatar}
+                                             disabled={uploadingAvatar || savingProfile}
+                                             className="px-3 py-1.5 rounded-xl text-rose-500 hover:bg-rose-500/10 text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+                                             title="Hapus foto profil saat ini"
+                                          >
+                                             <Trash2 size={13} />
+                                             <span>Hapus</span>
+                                          </button>
+                                       )}
+                                    </div>
+
+                                    <p className="text-[11px] text-[var(--color-ink-muted)]">
+                                       {avatarFile
+                                          ? `Berkas: ${avatarFile.name} (${(avatarFile.size / 1024).toFixed(0)} KB)`
+                                          : "Format didukung: JPG, PNG, WebP, GIF. Maksimal ukuran 5MB."}
+                                    </p>
+                                 </div>
+                              </div>
+                           </div>
                         </div>
 
                         <div className="pt-2">

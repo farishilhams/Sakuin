@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { dropdownMenu, tapScale, tapScaleSubtle } from "../utils/motionVariants";
+import { getAvatarUrl } from "../utils/avatarHelper";
 
 export default function Header({ onTransactionSaved }) {
    const { user, logout } = useContext(AuthContext);
@@ -159,6 +160,37 @@ export default function Header({ onTransactionSaved }) {
                            </>
                         )}
                      </NavLink>
+
+                     {/* Nav Tab: Riwayat & Arsip */}
+                     <NavLink
+                        to="/history"
+                        className={({ isActive }) =>
+                           `relative px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-colors duration-200 cursor-pointer ${
+                              isActive
+                                 ? "text-white"
+                                 : "text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
+                           }`
+                        }
+                     >
+                        {({ isActive }) => (
+                           <>
+                              {isActive && (
+                                 <motion.div
+                                    layoutId="active-nav-pill"
+                                    className="absolute inset-0 bg-emerald-600 rounded-xl shadow-xs"
+                                    transition={{
+                                       type: "spring",
+                                       stiffness: 350,
+                                       damping: 30,
+                                    }}
+                                 />
+                              )}
+                              <span className="relative z-10">
+                                 Riwayat & Arsip
+                              </span>
+                           </>
+                        )}
+                     </NavLink>
                   </div>
 
                   {/* Receipt / QRIS Scanner CTA Button */}
@@ -220,7 +252,7 @@ export default function Header({ onTransactionSaved }) {
                      >
                         {user?.avatar ? (
                            <img
-                              src={user.avatar}
+                              src={getAvatarUrl(user.avatar)}
                               alt={user.name || "Profil"}
                               className="w-8 h-8 rounded-xl object-cover border border-emerald-500/30"
                               onError={(e) => {
@@ -258,7 +290,7 @@ export default function Header({ onTransactionSaved }) {
                               <div className="p-3 rounded-xl bg-[var(--color-bg)] border border-[var(--color-border)] mb-1.5 flex items-center gap-3">
                                  {user?.avatar ? (
                                     <img
-                                       src={user.avatar}
+                                       src={getAvatarUrl(user.avatar)}
                                        alt={user.name || "User"}
                                        className="w-10 h-10 rounded-xl object-cover border border-emerald-500/30 shrink-0"
                                     />

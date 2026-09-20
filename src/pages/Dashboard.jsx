@@ -158,7 +158,7 @@ const Dashboard = () => {
    if (!user) return null;
 
    return (
-      <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-ink)] flex flex-col justify-between">
+      <div className="min-h-screen bg-transparent flex flex-col justify-between">
          <div>
             <Header
                logout={logout}

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/authController");
 const authMiddleware = require("../middleware/authMiddleware");
+const { handleAvatarUpload } = require("../middleware/uploadMiddleware");
 const passport = require("passport");
 
 router.post("/register", authController.register);
@@ -12,7 +13,8 @@ router.post("/reset-password/:token", authController.resetPassword);
 
 // Protected Auth Routes
 router.get("/me", authMiddleware, authController.getMe);
-router.put("/profile", authMiddleware, authController.updateProfile);
+router.post("/upload-avatar", authMiddleware, handleAvatarUpload, authController.uploadAvatar);
+router.put("/profile", authMiddleware, handleAvatarUpload, authController.updateProfile);
 router.put("/change-password", authMiddleware, authController.changePassword);
 
 // Google OAuth routes

@@ -2,6 +2,8 @@ const User = require("../models/User");
 const Budget = require("../models/Budget");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+const path = require("path");
+const fs = require("fs");
 
 const register = async (req, res) => {
    try {
@@ -130,6 +132,59 @@ const getMe = async (req, res) => {
    }
 };
 
+// POST /api/auth/upload-avatar
+const uploadAvatar = async (req, res) => {
+   try {
+      if (!req.file) {
+         return res.status(400).json({
+            message: "Silakan pilih berkas foto untuk diunggah",
+         });
+      }
+
+      const user = await User.findById(req.user.userId);
+      if (!user) {
+         return res.status(404).json({ message: "Pengguna tidak ditemukan" });
+      }
+
+      // Format path file lokal yang dapat diakses secara publik
+      const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+
+      // Hapus avatar lama jika sebelumnya merupakan file lokal di uploads/avatars/
+      if (user.avatar && user.avatar.startsWith("/uploads/avatars/")) {
+         const oldAvatarPath = path.join(__dirname, "..", user.avatar);
+         if (fs.existsSync(oldAvatarPath)) {
+            try {
+               fs.unlinkSync(oldAvatarPath);
+            } catch (err) {
+               console.warn("[Avatar Cleanup Warning]: Gagal menghapus avatar lama:", err.message);
+            }
+         }
+      }
+
+      user.avatar = avatarUrl;
+      await user.save();
+
+      res.status(200).json({
+         message: "Foto profil berhasil diunggah",
+         avatarUrl,
+         user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone || "",
+            avatar: user.avatar,
+            createdAt: user.createdAt,
+         },
+      });
+   } catch (error) {
+      console.error("uploadAvatar error:", error);
+      res.status(500).json({
+         message: "Gagal mengunggah foto profil",
+         error: error.message,
+      });
+   }
+};
+
 // PUT /api/auth/profile
 const updateProfile = async (req, res) => {
    try {
@@ -141,7 +196,24 @@ const updateProfile = async (req, res) => {
 
       if (name) user.name = name.trim();
       if (phone !== undefined) user.phone = phone.trim();
-      if (avatar !== undefined) user.avatar = avatar;
+
+      // Jika ada file yang diunggah via multipart di endpoint ini
+      if (req.file) {
+         const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+         if (user.avatar && user.avatar.startsWith("/uploads/avatars/")) {
+            const oldAvatarPath = path.join(__dirname, "..", user.avatar);
+            if (fs.existsSync(oldAvatarPath)) {
+               try {
+                  fs.unlinkSync(oldAvatarPath);
+               } catch (err) {
+                  console.warn("[Avatar Cleanup Warning]:", err.message);
+               }
+            }
+         }
+         user.avatar = avatarUrl;
+      } else if (avatar !== undefined) {
+         user.avatar = avatar;
+      }
 
       // Jika email diubah, cek keunikan
       if (email && email.toLowerCase() !== user.email) {
@@ -304,6 +376,7 @@ module.exports = {
    googleAuthCallback,
    getMe,
    updateProfile,
+   uploadAvatar,
    changePassword,
    forgotPassword,
    resetPassword,

@@ -46,10 +46,15 @@ app.use(
    })
 );
 
+const path = require("path");
+
 // Body parser & Cookie parser
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
+
+// Serve static uploaded files (avatars, receipts)
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // NoSQL Query Injection Sanitization
 app.use(mongoSanitize());

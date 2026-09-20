@@ -17,6 +17,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { Toaster } from "react-hot-toast";
 import AppShell from "./layouts/AppShell";
 import ProfilePage from "./pages/ProfilePage";
+import HistoryPage from "./pages/HistoryPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
@@ -81,6 +82,8 @@ function App() {
                       >
                          <Route path="/" element={<Dashboard />} />
                          <Route path="/wishlist" element={<DashboardWishlist />} />
+                         <Route path="/history" element={<HistoryPage />} />
+                         <Route path="/riwayat" element={<HistoryPage />} />
                          <Route path="/profile" element={<ProfilePage />} />
                          <Route path="/profil" element={<ProfilePage />} />
                       </Route>
