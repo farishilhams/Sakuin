@@ -82,8 +82,19 @@ const Dashboard = () => {
       }, 0);
    };
 
-   // Fetch data
+   // Safe fallback user resolution from context or localStorage to prevent blank render
+   const effectiveUser = user || (() => {
+      try {
+         const stored = localStorage.getItem("user");
+         return stored ? JSON.parse(stored) : null;
+      } catch {
+         return null;
+      }
+   })();
+
+   // Fetch data safely with isMounted check
    useEffect(() => {
+      let isMounted = true;
       const fetchData = async () => {
          try {
             setIsLoading(true);
@@ -92,18 +103,31 @@ const Dashboard = () => {
                api.get("/budgets"),
                api.get("/pemasukan"),
             ]);
-            setTransactions(txRes.data || []);
-            setBudgets(budgetRes.data || []);
-            setMonthlyIncome(incomeRes.data?.[0] || null);
+            if (isMounted) {
+               setTransactions(Array.isArray(txRes.data) ? txRes.data : []);
+               setBudgets(Array.isArray(budgetRes.data) ? budgetRes.data : []);
+               setMonthlyIncome(incomeRes.data?.[0] || null);
+            }
          } catch (error) {
             console.error("Error fetching data", error);
-            toast.error("Gagal memuat data keuangan");
+            if (isMounted) {
+               toast.error("Gagal memuat data keuangan");
+            }
          } finally {
-            setIsLoading(false);
+            if (isMounted) {
+               setIsLoading(false);
+            }
          }
       };
-      if (user) fetchData();
-   }, [user]);
+
+      if (effectiveUser) {
+         fetchData();
+      }
+
+      return () => {
+         isMounted = false;
+      };
+   }, [effectiveUser?._id || effectiveUser?.id]);
 
    // Hitung total pengeluaran aktual per kategori
    // Hitung total pengeluaran aktual per kategori
@@ -155,10 +179,17 @@ const Dashboard = () => {
       }
    }, [transactions]);
 
-   if (!user) return null;
+   if (!effectiveUser) {
+      return (
+         <div className="min-h-[100dvh] w-full flex flex-col items-center justify-center bg-transparent py-20 text-[var(--color-ink-muted)]">
+            <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mb-3" />
+            <span className="text-xs font-medium">Memuat data akun...</span>
+         </div>
+      );
+   }
 
    return (
-      <div className="min-h-screen bg-transparent flex flex-col justify-between">
+      <div className="min-h-[100dvh] w-full bg-transparent flex flex-col justify-between pb-32 md:pb-8">
          <div>
             <Header
                logout={logout}
@@ -167,9 +198,9 @@ const Dashboard = () => {
                }
             />
 
-            <main className="max-w-7xl mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8 pb-28 md:pb-12">
+            <main className="max-w-7xl mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8">
                {/* Welcome Banner */}
-               <WelcomeMessage user={user} />
+               <WelcomeMessage user={effectiveUser} />
 
                {/* Stats Cards (#1, #2, #3) */}
                <StatsCardKeuangan
@@ -223,7 +254,7 @@ const Dashboard = () => {
 
 
          {/* Footer */}
-         <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)] py-5 mt-12 mb-16 md:mb-0 transition-colors">
+         <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)] py-5 mt-12 mb-0 transition-colors">
             <div className="max-w-7xl mx-auto px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[var(--color-ink-muted)]">
                <div className="flex items-center gap-2 font-medium">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />

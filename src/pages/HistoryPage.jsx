@@ -161,7 +161,7 @@ export default function HistoryPage() {
    }, [filteredHistory]);
 
    return (
-      <div className="min-h-screen bg-transparent flex flex-col justify-between transition-colors">
+      <div className="min-h-[100dvh] w-full bg-transparent flex flex-col justify-between pb-32 md:pb-8 transition-colors">
          <div>
             {/* Top Navigation Bar */}
             <Header />
@@ -432,7 +432,7 @@ export default function HistoryPage() {
          </div>
 
          {/* Footer */}
-         <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)] py-5 mt-12 mb-16 md:mb-0 transition-colors">
+         <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)] py-5 mt-12 mb-0 transition-colors">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[var(--color-ink-muted)]">
                <div className="flex items-center gap-2 font-medium">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />

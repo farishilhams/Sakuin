@@ -93,11 +93,11 @@ const DashboardWishlist = () => {
    };
 
    return (
-      <div className="min-h-screen bg-transparent flex flex-col justify-between">
+      <div className="min-h-[100dvh] w-full bg-transparent flex flex-col justify-between pb-32 md:pb-8">
          <div>
             <Header logout={logout} />
 
-            <main className="max-w-7xl mx-auto px-4 sm:px-8 py-8 space-y-8">
+            <main className="max-w-7xl mx-auto px-4 sm:px-8 py-8 space-y-8 pb-6">
                {/* Stats Cards Row */}
                <div className="flex flex-col sm:flex-row gap-6">
                   <WishlistStatsCard
@@ -140,10 +140,8 @@ const DashboardWishlist = () => {
             item={currentItem}
          />
 
-
-
          {/* Footer */}
-         <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)] py-5 mt-12 mb-16 md:mb-0 transition-colors">
+         <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)] py-5 mt-12 mb-0 transition-colors">
             <div className="max-w-7xl mx-auto px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[var(--color-ink-muted)]">
                <div className="flex items-center gap-2 font-medium">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import DraggableFAB from "../components/DraggableFAB";
 import BottomNav from "../components/BottomNav";
 import TransactionModal from "../components/TransactionModal";
@@ -22,30 +22,18 @@ export default function AppShell() {
    };
 
    return (
-      <div className="min-h-screen relative flex flex-col bg-[var(--color-bg)] text-[var(--color-ink)] selection:bg-emerald-500 selection:text-white">
-         {/* Render Active Route View with smooth GPU-accelerated transition */}
-         <div className="flex-1 w-full relative">
-            <AnimatePresence mode="popLayout" initial={false}>
-               <motion.div
-                  key={location.pathname}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{
-                     opacity: 0,
-                     y: -6,
-                     position: "absolute",
-                     top: 0,
-                     left: 0,
-                     right: 0,
-                     width: "100%",
-                  }}
-                  transition={{ duration: 0.18, ease: "easeOut" }}
-                  style={{ willChange: "opacity, transform" }}
-                  className="w-full"
-               >
-                  <Outlet />
-               </motion.div>
-            </AnimatePresence>
+      <div className="min-h-[100dvh] w-full relative flex flex-col bg-[var(--color-bg)] text-[var(--color-ink)] selection:bg-emerald-500 selection:text-white">
+         {/* Render Active Route View with smooth GPU-friendly opacity transition */}
+         <div className="flex-1 w-full flex flex-col min-h-[100dvh] relative">
+            <motion.div
+               key={location.pathname}
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 1 }}
+               transition={{ duration: 0.12, ease: "easeOut" }}
+               className="w-full flex-1 flex flex-col min-h-[100dvh]"
+            >
+               <Outlet />
+            </motion.div>
          </div>
 
          {/* Draggable AssistiveTouch Floating Action Button (iOS Style) */}
