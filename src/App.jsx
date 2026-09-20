@@ -89,7 +89,9 @@ function App() {
                       </Route>
 
                       {/* Public Routes */}
-                      <Route path="/login" element={<Login />} />
+                      <Route path="/login" element={<Login initialMode="sign-in" />} />
+                      <Route path="/register" element={<Login initialMode="sign-up" />} />
+                      <Route path="/auth" element={<Login initialMode="sign-in" />} />
                       <Route path="/forgot-password" element={<ForgotPassword />} />
                       <Route path="/reset-password/:token" element={<ResetPassword />} />
                       <Route path="/maintenance" element={<UnderMaintenancePage />} />
