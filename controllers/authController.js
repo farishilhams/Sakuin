@@ -2,8 +2,6 @@ const User = require("../models/User");
 const Budget = require("../models/Budget");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-const path = require("path");
-const fs = require("fs");
 const { uploadBufferToStorage } = require("../config/cloudinary");
 
 const register = async (req, res) => {

@@ -41,7 +41,3 @@ SKILL.md
 SECURITY.md
 TODO.md
 
-# Uploaded user media
-uploads/*
-!uploads/**/.gitkeep
-
