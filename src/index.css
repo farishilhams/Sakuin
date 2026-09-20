@@ -77,6 +77,8 @@ html {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  touch-action: manipulation;
 }
 
 body {
@@ -91,6 +93,20 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
   overflow-y: visible;
+  touch-action: manipulation;
+  overscroll-behavior-y: none;
+}
+
+/* Prevent double-tap-to-zoom on all interactive elements */
+button, a, input, select, textarea {
+  touch-action: manipulation;
+}
+
+/* Prevent iOS Safari auto-zoom on input focus by guaranteeing 16px font-size */
+@media screen and (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
 }
 
 #root {

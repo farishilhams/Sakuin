@@ -81,15 +81,19 @@ export default function BottomNav({ onOpenQuickAdd, onOpenHistory }) {
 
             {/* 3. Central Hero Quick Add (+) Button */}
             <div className="flex-1 flex justify-center -mt-5">
-               <motion.button
-                  type="button"
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.92 }}
-                  onClick={onOpenQuickAdd}
-                  className="w-13 h-13 rounded-2xl bg-gradient-to-tr from-emerald-600 via-emerald-500 to-teal-400 text-white shadow-lg shadow-emerald-500/35 flex items-center justify-center border-2 border-[var(--color-surface)] cursor-pointer"
-                  title="Catat Pengeluaran Sat-Set"
-                  aria-label="Catat Pengeluaran Cepat"
-               >
+                <motion.button
+                   type="button"
+                   whileHover={{ scale: 1.08 }}
+                   whileTap={{ scale: 0.92 }}
+                   onClick={(e) => {
+                      e.preventDefault();
+                      onOpenQuickAdd();
+                   }}
+                   style={{ touchAction: "manipulation" }}
+                   className="w-13 h-13 rounded-2xl bg-gradient-to-tr from-emerald-600 via-emerald-500 to-teal-400 text-white shadow-lg shadow-emerald-500/35 flex items-center justify-center border-2 border-[var(--color-surface)] cursor-pointer"
+                   title="Catat Pengeluaran Sat-Set"
+                   aria-label="Catat Pengeluaran Cepat"
+                >
                   <Plus size={24} className="stroke-[2.8]" />
                </motion.button>
             </div>

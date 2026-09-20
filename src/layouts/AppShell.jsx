@@ -37,7 +37,9 @@ export default function AppShell() {
          </div>
 
          {/* Draggable AssistiveTouch Floating Action Button (iOS Style) */}
-         <DraggableFAB onOpenQuickAdd={() => setShowQuickAdd(true)} />
+         {!showQuickAdd && !showScanner && !showHistory && (
+            <DraggableFAB onOpenQuickAdd={() => setShowQuickAdd(true)} />
+         )}
 
          {/* Mobile Bottom Navigation Bar (5 Items) - Zero Page Reload */}
          <BottomNav

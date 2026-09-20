@@ -310,13 +310,16 @@ const TransactionModal = ({
    }, [walletSearchQuery, customWalletsList]);
 
    return (
-      <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div
+         className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 overscroll-contain"
+         style={{ touchAction: "pan-y" }}
+      >
          <motion.div
             initial={{ opacity: 0, y: 40, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.98 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
-            className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-t-3xl sm:rounded-3xl shadow-2xl w-full max-w-md max-h-[95vh] flex flex-col overflow-hidden"
+            className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-t-3xl sm:rounded-3xl shadow-2xl w-full max-w-md max-h-[92dvh] flex flex-col overflow-hidden overscroll-contain"
          >
             {/* Mobile Sheet Handle */}
             <div className="sm:hidden w-12 h-1.5 bg-[var(--color-border)] rounded-full mx-auto mt-2.5 mb-1 shrink-0" />

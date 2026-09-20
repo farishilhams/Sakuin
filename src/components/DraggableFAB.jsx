@@ -68,7 +68,11 @@ export default function DraggableFAB({ onOpenQuickAdd }) {
    const handlePointerDown = (e) => {
       // Only primary mouse button or touch
       if (e.button !== undefined && e.button !== 0) return;
-      e.currentTarget.setPointerCapture(e.pointerId);
+      try {
+         e.currentTarget.setPointerCapture(e.pointerId);
+      } catch (err) {
+         // ignore
+      }
 
       pointerDownPos.current = {
          x: e.clientX,
@@ -76,6 +80,8 @@ export default function DraggableFAB({ onOpenQuickAdd }) {
          time: Date.now(),
          initialButtonX: currentPos.current.x,
          initialButtonY: currentPos.current.y,
+         pointerId: e.pointerId,
+         target: e.currentTarget,
       };
       setIsDragging(false);
    };
@@ -109,11 +115,23 @@ export default function DraggableFAB({ onOpenQuickAdd }) {
       const deltaY = e.clientY - pointerDownPos.current.y;
       const distance = Math.hypot(deltaX, deltaY);
 
+      try {
+         if (pointerDownPos.current.target && pointerDownPos.current.pointerId !== undefined) {
+            pointerDownPos.current.target.releasePointerCapture(pointerDownPos.current.pointerId);
+         }
+      } catch (err) {
+         // ignore
+      }
+
       pointerDownPos.current.time = 0;
 
       // Tap detection (< 8px movement)
       if (distance <= 8) {
          setIsDragging(false);
+         if (e.cancelable) {
+            e.preventDefault();
+         }
+         e.stopPropagation();
          if (onOpenQuickAdd) {
             onOpenQuickAdd();
          }
@@ -154,7 +172,10 @@ export default function DraggableFAB({ onOpenQuickAdd }) {
             onPointerUp={handlePointerUp}
             onPointerCancel={handlePointerUp}
             whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.94 }}
+            onClick={(e) => {
+               e.preventDefault();
+               e.stopPropagation();
+            }}
             className={`pointer-events-auto absolute top-0 left-0 w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-600 via-emerald-500 to-teal-400 text-white shadow-xl shadow-emerald-600/35 border-2 border-[var(--color-surface)] flex items-center justify-center cursor-pointer select-none transition-shadow ${
                isDragging ? "shadow-2xl shadow-emerald-500/50 scale-105" : ""
             }`}
@@ -162,6 +183,7 @@ export default function DraggableFAB({ onOpenQuickAdd }) {
                touchAction: "none",
                userSelect: "none",
                WebkitUserSelect: "none",
+               WebkitTouchCallout: "none",
             }}
             title="Catat Pengeluaran Sat-Set — Geser ke mana saja"
             aria-label="Catat Pengeluaran Cepat"
